@@ -84,9 +84,27 @@ See each client for exact URL construction:
 
 All outbound HTTP sets `User-Agent: FoxHunt/0.1 (<SiteConfig.AppContactEmail>)` to be a good API citizen.
 
-## V2 — TDoA overlay (scoped, not built)
+## Roadmap
 
-Plan: install Python 3.10+ and clone `github.com/llinkz/directTDoA` under `FoxHunt/Python/`. `Handlers/TdoaApi.ashx` will `Process.Start("python.exe", "directTDoA/cli.py ...")` against 3+ KiwiSDRs selected from the map, parse stdout JSON into a `TdoaJob` row, and return `{lat, lon, uncertaintyKm}`. The JS adds a red `L.marker` + `L.circle` ellipse overlay on the same Leaflet map. Hunt.aspx button is present but disabled.
+### v1.1 — RBN wireup (scheduled 2026-05-08)
+Implement the real `RbnClient`. Currently a stub at `FoxHuntCore/Clients/RbnClient.cs`.
+- Add `RbnSkimmer (Callsign, Lat, Lon, FetchedUtc)` table to `Scripts/Sql/CreateFoxHuntSchema.sql`.
+- Populate from a stable public skimmer list (CSV export, community mirror, or per-call HamQTH/QRZ lookup). Cache in SQLite.
+- Scrape `https://www.reversebeacon.net/main.php?rows=100&hc={call}` with HtmlAgilityPack (same pattern as `KiwiListClient.cs`).
+- Join scraped spot rx-callsigns against the skimmer cache; emit `ReceptionReport` rows with real lat/lon. Skip unknown skimmers. Handle portable suffixes (`/P`, `/M`, `/MM`, `/AM`).
+- Remove the "stubbed in v1" callout from `CLAUDE.md` and `README.md`. Open a PR.
+
+### v1.2 — National emergency-services map (scheduled 2026-05-22)
+New page `/EmergencyMap.aspx` + handler `/Handlers/IncidentsApi.ashx` reusing the Leaflet map foundation from Hunt.aspx.
+- Aggregator pattern identical to `ReceptionAggregator` — one `IIncidentClient` per source, `Task.WhenAll` fan-out.
+- Municipal CAD feeds (sample cities, JSON/RSS): Seattle, SF, Oakland, Boston, NYC, Chicago, DC, Raleigh, Charlotte, Austin, Portland, Minneapolis, Denver, Phoenix. Curated list in `FoxHuntCore/EmergencySources.cs`; per-city client normalizes to a common `Incident` DTO (type, location, dispatched units, observedUtc).
+- National helicopter layer via **OpenSky Network** (`opensky-network.org/api/states/all` — free, anon, ~100 req/day limit) or **adsb.fi** (`adsb.fi/api/v2/…` — free, higher limits). Filter by operator callsign prefixes (PD, MEDEVAC, LIFE FLIGHT, etc.) or via type lookup.
+- New tables: `Incident (Id, SourceCity, IncidentType, Lat, Lon, Address, UnitsJson, ObservedUtc, RawJson)`, `Aircraft (Icao24, Callsign, Operator, Lat, Lon, Heading, Altitude, ObservedUtc)`.
+- UI: same dark shell, sidebar filters (city / service type / aircraft on/off), Leaflet markers color-coded fire=red / EMS=green / police=blue / aircraft=yellow. Click → popup with type, units dispatched, duration.
+- Scope clarifier: **individual ground-vehicle GPS tracks are not publicly available** and are not in scope. This is an incident-awareness map, not an AVL dashboard.
+
+### v2.0 — TDoA overlay (not scheduled)
+Install Python 3.10+ and clone `github.com/llinkz/directTDoA` under `FoxHunt/Python/`. `Handlers/TdoaApi.ashx` will `Process.Start("python.exe", "directTDoA/cli.py ...")` against 3+ KiwiSDRs selected from the map, parse stdout JSON into a `TdoaJob` row, and return `{lat, lon, uncertaintyKm}`. The JS adds a red `L.marker` + `L.circle` ellipse overlay on the same Leaflet map. Hunt.aspx button is present but disabled.
 
 ## Known inherited cruft
 

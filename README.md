@@ -56,9 +56,12 @@ Edit on `Admin.aspx` or directly in the `SiteConfig` SQLite table:
                         └──────────────┘
 ```
 
-## V2 — TDoA overlay
+## Roadmap
 
-Scoped but not built. Will add a Python sidecar (`directTDoA`) invoked from `TdoaApi.ashx` against 3+ selected KiwiSDRs, rendering the solved point + uncertainty ellipse on the same Leaflet map. See `FoxHunt/CLAUDE.md`.
+- **v1.0 — Footprint viewer** (shipped). PSKReporter + WSPRnet on Leaflet/Esri satellite map.
+- **v1.1 — RBN wireup** (scheduled). Replace the empty stub in `FoxHuntCore/Clients/RbnClient.cs` with a real implementation: scrape `reversebeacon.net/main.php?hc={call}` for spots, join skimmer callsigns against a cached `RbnSkimmer` table populated from public stations list, emit `ReceptionReport` rows with lat/lon. Handles CW/RTTY traffic, which PSKReporter and WSPRnet don't.
+- **v1.2 — National emergency-services map** (scheduled). New `/EmergencyMap.aspx` page on the same Leaflet map foundation. National scope — aggregates active incidents from municipal open-data CAD feeds across ~15 US cities (Seattle, SF, Boston, NYC, Chicago, Raleigh, Charlotte, DC, Austin, Portland, Minneapolis, Denver, Phoenix, Oakland, Durham if published) plus live police/EMS helicopter tracks via **OpenSky Network** or **adsb.fi** (both free JSON APIs). Color-coded pins per service (fire red / EMS green / police blue) with dispatched-unit popups. **No ground vehicle GPS tracking** — that data isn't publicly available; agencies don't broadcast AVL. v1.2 is about incident locations + aircraft, not individual trucks.
+- **v2.0 — TDoA overlay**. Python sidecar (`directTDoA`) invoked from `TdoaApi.ashx` against 3+ selected KiwiSDRs, renders the solved point + uncertainty ellipse on the same Leaflet map. See `FoxHunt/CLAUDE.md`.
 
 ## License / ethics
 
