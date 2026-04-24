@@ -94,14 +94,18 @@ Implement the real `RbnClient`. Currently a stub at `FoxHuntCore/Clients/RbnClie
 - Join scraped spot rx-callsigns against the skimmer cache; emit `ReceptionReport` rows with real lat/lon. Skip unknown skimmers. Handle portable suffixes (`/P`, `/M`, `/MM`, `/AM`).
 - Remove the "stubbed in v1" callout from `CLAUDE.md` and `README.md`. Open a PR.
 
-### v1.2 — National emergency-services map (scheduled 2026-05-22)
+### v1.2 — National emergency-services map + scanner radio (scheduled 2026-05-22)
 New page `/EmergencyMap.aspx` + handler `/Handlers/IncidentsApi.ashx` reusing the Leaflet map foundation from Hunt.aspx.
 - Aggregator pattern identical to `ReceptionAggregator` — one `IIncidentClient` per source, `Task.WhenAll` fan-out.
 - Municipal CAD feeds (sample cities, JSON/RSS): Seattle, SF, Oakland, Boston, NYC, Chicago, DC, Raleigh, Charlotte, Austin, Portland, Minneapolis, Denver, Phoenix. Curated list in `FoxHuntCore/EmergencySources.cs`; per-city client normalizes to a common `Incident` DTO (type, location, dispatched units, observedUtc).
 - National helicopter layer via **OpenSky Network** (`opensky-network.org/api/states/all` — free, anon, ~100 req/day limit) or **adsb.fi** (`adsb.fi/api/v2/…` — free, higher limits). Filter by operator callsign prefixes (PD, MEDEVAC, LIFE FLIGHT, etc.) or via type lookup.
-- New tables: `Incident (Id, SourceCity, IncidentType, Lat, Lon, Address, UnitsJson, ObservedUtc, RawJson)`, `Aircraft (Icao24, Callsign, Operator, Lat, Lon, Heading, Altitude, ObservedUtc)`.
-- UI: same dark shell, sidebar filters (city / service type / aircraft on/off), Leaflet markers color-coded fire=red / EMS=green / police=blue / aircraft=yellow. Click → popup with type, units dispatched, duration.
-- Scope clarifier: **individual ground-vehicle GPS tracks are not publicly available** and are not in scope. This is an incident-awareness map, not an AVL dashboard.
+- **Scanner radio integration (OpenMHz).** Incident popups embed an audio player that plays the most recent 2–3 call recordings from the best-matching talkgroup via OpenMHz's free JSON API (`https://openmhz.com/api/v1/systems`, `/systems/{shortname}/talkgroups`, `/systems/{shortname}/calls/newer?time=<epoch>`). Per-call audio is served as `.m4a`. ~15–60s lag vs live but no API key required.
+- **Broadcastify live-stream fallback.** For popular community feeds, embed a public iframe player (`https://www.broadcastify.com/webPlayer.php?feedId={id}`) — no key needed, curated city→feedId mapping in `FoxHuntCore/Emergency/ScannerFeeds.cs`.
+- **Activity heatmap layer** (sidebar toggle). Poll OpenMHz `/calls/newer` per monitored system every 60s, roll up call counts into 5-min buckets per agency, render as `L.heatLayer` weighted by call count. Spikes correlate with activity that may not hit CAD feeds yet (tactical, multi-agency, in-progress).
+- **Encryption rule.** Skip any OpenMHz talkgroup flagged `encrypted:true`. We can't play ciphertext and shouldn't attempt to.
+- New tables: `Incident (Id, SourceCity, IncidentType, Lat, Lon, Address, UnitsJson, ObservedUtc, RawJson)`, `Aircraft (Icao24, Callsign, Operator, Lat, Lon, Heading, Altitude, ObservedUtc)`, `Talkgroup (Id, SystemShortname, TalkgroupId, Name, Category, Agency, CityKey, Encrypted)`, `TalkgroupActivity (Id, TalkgroupFk, WindowStartUtc, CallCount, LastCallUtc)`.
+- UI: same dark shell, sidebar filters (city / service type / aircraft on/off / activity-heatmap on/off), Leaflet markers color-coded fire=red / EMS=green / police=blue / aircraft=yellow. Click → popup with type, units dispatched, duration, and (when available) embedded scanner audio.
+- Scope clarifier: **individual ground-vehicle GPS tracks are not publicly available** and are not in scope. This is an incident-awareness + radio-activity map, not an AVL dashboard.
 
 ### v2.0 — TDoA overlay (not scheduled)
 Install Python 3.10+ and clone `github.com/llinkz/directTDoA` under `FoxHunt/Python/`. `Handlers/TdoaApi.ashx` will `Process.Start("python.exe", "directTDoA/cli.py ...")` against 3+ KiwiSDRs selected from the map, parse stdout JSON into a `TdoaJob` row, and return `{lat, lon, uncertaintyKm}`. The JS adds a red `L.marker` + `L.circle` ellipse overlay on the same Leaflet map. Hunt.aspx button is present but disabled.
