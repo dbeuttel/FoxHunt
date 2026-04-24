@@ -1,0 +1,113 @@
+﻿.autofield {
+	display: inline-flex;
+	flex-flow: column-reverse;
+	margin: 1em;
+	/* border: 1px solid; */
+	border-radius: 8px;
+	padding: 0.8em;
+	background: white;
+	box-shadow: 3px 20px 20px -17px rgba(0,0,0,0.55);
+	box-sizing: content-box;
+	border: solid 2px white;
+	width: 100%;
+	padding-right:4px;
+}
+
+.autofieldWrap {
+	display: inline-block;
+	width:100%;
+}
+
+.autoFieldFocused {
+	border: solid 2px #2367FA;
+	-webkit-animation: fadein 2s;
+}
+
+.autoicon {
+	margin-right: 5px;
+}
+
+/**
+* Add a transition to the label and input.
+* I'm not even sure that touch-action: manipulation works on
+* inputs, but hey, it's new and cool and could remove the 
+* pesky delay.
+*/
+label.auto, input.auto, textarea.auto {
+	transition: all 0.25s;
+	touch-action: manipulation;
+}
+
+input.auto, textarea.auto {
+	font-size: 1.4em;
+	border: 0;
+	border-bottom: 1px dotted #ccc;
+	font-family: inherit;
+	-webkit-appearance: none;
+	border-radius: 0;
+	padding: 0;
+	cursor: text;
+}
+
+	input.auto:focus, textarea.auto:focus {
+		outline: 0;
+		border-bottom: 1px dotted #666;
+	}
+
+label.auto {
+	/*text-transform: uppercase;*/
+	letter-spacing: 0.05em;
+}
+/**
+* Translate down and scale the label up to cover the placeholder,
+* when following an input (with placeholder-shown support).
+* Also make sure the label is only on one row, at max 2/3rds of the
+* field—to make sure it scales properly and doesn't wrap.
+*/
+.auto:placeholder-shown + label {
+    cursor: text;
+    max-width: 66.66%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transform-origin: left bottom;
+    transform: translate(0, 2.525rem) scale(1.2);
+}
+
+@-webkit-keyframes mymove {
+	from {
+		color: #000;
+	}
+
+	to {
+		color: #999;
+	}
+}
+
+/**
+* By default, the placeholder should be transparent. Also, it should 
+* inherit the transition.
+*/
+.auto::-webkit-input-placeholder {
+	opacity: 0;
+	transition: inherit;
+}
+/**
+* Show the placeholder when the input is focused.
+*/
+.auto:focus::-webkit-input-placeholder {
+	opacity: 1;
+}
+/**
+* When the element is focused, remove the label transform.
+* Also, do this when the placeholder is _not_ shown, i.e. when 
+* there's something in the input at all.
+*/
+input.auto:not(:placeholder-shown) + label,
+input.auto:focus + label,
+textarea.auto:not(:placeholder-shown) + label,
+textarea.auto:focus + label {
+	transform: translate(0, 0) scale(1);
+	cursor: pointer;
+	color: #999;
+}

@@ -1,0 +1,13 @@
+/*
+Credit: http://www.templatemo.com
+*/
+
+body {
+	margin: 0px;
+	padding: 0px;
+}
+h2{margin:0px;}
+   table { page-break-inside:auto }
+    tr    { page-break-inside:avoid; page-break-after:auto }
+    td    { page-break-inside:avoid; page-break-after:auto; vertical-align:top; padding:4px; font-size:small; }
+    

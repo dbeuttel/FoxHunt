@@ -1,0 +1,191 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Cal.Master.cs" Inherits="FoxHunt.Dlg" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"   
+    lang="en"
+  class="light-style layout-navbar-fixed layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="/assets/"
+  data-template="vertical-menu-template-starter">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <%--<title>Fullcalendar - Apps | Frest - Bootstrap Admin Template</title>--%>
+    <title></title>
+    <link name="mystyle" href="/js/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/js/SiteFunctions.js?ver=4" language="javascript"></script>
+    	<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+	<!-- Related styles of various icon packs and plugins -->
+	<link rel="stylesheet" href="/css/plugins.css">
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="/assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="/assets/vendor/fonts/flag-icons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/assets/css/app.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/fullcalendar/fullcalendar.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/flatpickr/flatpickr.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/quill/editor.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
+
+    <!-- Page CSS -->
+
+    <link rel="stylesheet" href="/assets/vendor/css/pages/app-calendar.css" />
+    <!-- Helpers -->
+    <script src="/assets/vendor/js/helpers.js"></script>
+
+    <%--<script src="/assets/vendor/js/template-customizer.js"></script>--%>
+    <script src="/assets/js/config.js"></script>
+
+  </head>
+<body>
+    
+    <form id="form1" runat="server">
+        <%if (Request.QueryString["popup"] != null)
+        { %>
+        <style>
+            .calendarView {
+          height: 510px;
+          width: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+        .app-calendar-wrapper {
+          transform-origin: top left;
+          position: absolute;
+        }
+        .container-xxl{
+            justify-content: center; 
+            display: flex;
+        }
+        </style>
+    <%} %>
+        <div><div class="style-switcher-toggle"></div></div>
+    <div>
+   <script type='text/javascript'>
+       function createDlg(URL, title, height, width, modal, id, Buttons) {
+           parent.createDlg(URL, title, height, width, modal, id, Buttons);
+       }
+
+       var getCurrentDlg = function () {
+           if (top === self)
+               return false; // Not in an iframe   
+           var iframe = getCurrentIframe();
+           if (!iframe) return false; //Can't find the iframe.. 
+           return iframe;
+       }
+
+       // This is gross. it just gets the iframe you are in. All this just to hide scroll bars
+       function getIframe() {
+           var iframe = null;
+           if (top === self)
+               return false; // Not in an iframe
+           $('iframe', parent.document).each(function (value) {
+               if ($(this).contents().find('body').html() == $(document).contents().find('body').html())
+                   iframe = $(this);
+           });
+           return iframe;
+       }
+
+       function addButtons() {
+           addButtonsFromFrame({ '.Save': function () { }, "Cancel": function () { return false; } });
+       }
+
+       function closeThis() {
+           var iframe = getIframe();
+           window.parent.closeAll($(iframe).parent().parent().find('.ui-dialog-content').attr('id'));
+       }
+
+   </script>
+
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            <%--546546--%>
+            <asp:Button ID="Save" runat="server" Text="Save" />
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+ <script type='text/javascript'>
+
+     $(function () {
+         $(".ui-jqgrid-titlebar").hide();
+         addButtons();
+         //addButtonsFromFrame({ '.Save': function () { }, "Cancel": function () { return false; } });
+         $(window).unbind("resize");
+         //var sizeGrids = function () {
+         //    $(".ui-jqgrid-btable").setGridHeight($(window).height() - $(".ui-jqgrid").next().height() - 35);
+         //    $(".ui-jqgrid-btable").setGridWidth($(window).width() - 15);
+         //}
+         //sizeGrids();
+
+         //$(window).resize(sizeGrids);
+     })
+
+     $(function () {
+         $('.toggleSwitch').addClass('switch')
+         $('.toggleSwitch input[type=checkbox]').after('<span class="slider"></span>')
+         $('.toggleSwitch').click(function () {
+             var cb = $(this).find('input[type=checkbox]');
+             if (cb.prop('checked') == false)
+                 cb.prop('checked', true)
+             else
+                 cb.prop('checked', false)
+         })
+     })
+
+ </script> 
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/assets/vendor/js/bootstrap.js"></script>
+    <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+    <script src="/assets/vendor/libs/hammer/hammer.js"></script>
+
+    <script src="/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+
+    <script src="/assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <%--<script src="/assets/vendor/libs/fullcalendar/fullcalendar.js"></script>--%>
+    <script src="/assets/vendor/libs/formvalidation/dist/js/FormValidation.js"></script>
+    <script src="/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
+    <script src="/assets/vendor/libs/select2/select2.js"></script>
+    <script src="/assets/vendor/libs/flatpickr/flatpickr.js"></script>
+    <script src="/assets/vendor/libs/moment/moment.js"></script>
+
+    <!-- Main JS -->
+    <script src="/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <%--<script src="/assets/js/app-calendar-events.js"></script>--%>
+    <%--<script src="/assets/js/app-calendar.js"></script>--%>
+</body>
+</html>

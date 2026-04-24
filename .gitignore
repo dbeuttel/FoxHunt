@@ -1,0 +1,50 @@
+# Build artifacts
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+
+# NuGet
+packages/
+!packages/repositories.config
+*.nupkg
+
+# SQLite runtime databases — regenerated on first boot
+*.db3
+*.db3-journal
+*.db3-wal
+*.db3-shm
+*.sqlite
+*.sqlite-journal
+Database/*.db3
+
+# Uploads / runtime-generated content
+uploads/
+wwwroot/uploads/
+
+# Logs
+*.log
+Logs/
+
+# Secrets / env-local overrides
+*.config.local
+.env
+.env.*
+appsettings.*.local.json
+secrets.json
+
+# IDE / OS
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+
+# Publish output
+publish/
+PublishProfiles/*.pubxml.user
+
+# Test / coverage
+TestResults/
+coverage/

@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VibeBaseProject.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Email" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">aliriano@dconc.gov</Value>
+    </Setting>
+    <Setting Name="Cherwell" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">aliriano@dconc.gov</Value>
+    </Setting>
+    <Setting Name="TMA" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">aliriano@dconc.gov</Value>
+    </Setting>
+    <Setting Name="Client" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">aliriano@dconc.gov</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

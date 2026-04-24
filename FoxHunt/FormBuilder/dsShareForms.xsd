@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsShareForms" targetNamespace="http://tempuri.org/dsShareForms.xsd" xmlns:mstns="http://tempuri.org/dsShareForms.xsd" xmlns="http://tempuri.org/dsShareForms.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsShareForms" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="dsShareForms" msprop:Generator_UserDSName="dsShareForms">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="FormResponse" msprop:Generator_TableClassName="FormResponseDataTable" msprop:Generator_TableVarName="tableFormResponse" msprop:Generator_TablePropName="FormResponse" msprop:Generator_RowDeletingName="FormResponseRowDeleting" msprop:Generator_RowChangingName="FormResponseRowChanging" msprop:Generator_RowEvHandlerName="FormResponseRowChangeEventHandler" msprop:Generator_RowDeletedName="FormResponseRowDeleted" msprop:Generator_UserTableName="FormResponse" msprop:Generator_RowChangedName="FormResponseRowChanged" msprop:Generator_RowEvArgName="FormResponseRowChangeEvent" msprop:Generator_RowClassName="FormResponseRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="FormQuestionID" msprop:Generator_ColumnVarNameInTable="columnFormQuestionID" msprop:Generator_ColumnPropNameInRow="FormQuestionID" msprop:Generator_ColumnPropNameInTable="FormQuestionIDColumn" msprop:Generator_UserColumnName="FormQuestionID" type="xs:int" minOccurs="0" />
+              <xs:element name="FormQuizID" msprop:Generator_ColumnVarNameInTable="columnFormQuizID" msprop:Generator_ColumnPropNameInRow="FormQuizID" msprop:Generator_ColumnPropNameInTable="FormQuizIDColumn" msprop:Generator_UserColumnName="FormQuizID" type="xs:int" minOccurs="0" />
+              <xs:element name="answer" msprop:Generator_ColumnVarNameInTable="columnanswer" msprop:Generator_ColumnPropNameInRow="answer" msprop:Generator_ColumnPropNameInTable="answerColumn" msprop:Generator_UserColumnName="answer" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="FormQuestion" msprop:Generator_TableClassName="FormQuestionDataTable" msprop:Generator_TableVarName="tableFormQuestion" msprop:Generator_TablePropName="FormQuestion" msprop:Generator_RowDeletingName="FormQuestionRowDeleting" msprop:Generator_RowChangingName="FormQuestionRowChanging" msprop:Generator_RowEvHandlerName="FormQuestionRowChangeEventHandler" msprop:Generator_RowDeletedName="FormQuestionRowDeleted" msprop:Generator_UserTableName="FormQuestion" msprop:Generator_RowChangedName="FormQuestionRowChanged" msprop:Generator_RowEvArgName="FormQuestionRowChangeEvent" msprop:Generator_RowClassName="FormQuestionRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="QuestionText" msprop:Generator_ColumnVarNameInTable="columnQuestionText" msprop:Generator_ColumnPropNameInRow="QuestionText" msprop:Generator_ColumnPropNameInTable="QuestionTextColumn" msprop:Generator_UserColumnName="QuestionText" type="xs:string" minOccurs="0" />
+              <xs:element name="QuestionType" msprop:Generator_ColumnVarNameInTable="columnQuestionType" msprop:Generator_ColumnPropNameInRow="QuestionType" msprop:Generator_ColumnPropNameInTable="QuestionTypeColumn" msprop:Generator_UserColumnName="QuestionType" type="xs:string" minOccurs="0" />
+              <xs:element name="Options" msprop:Generator_ColumnVarNameInTable="columnOptions" msprop:Generator_ColumnPropNameInRow="Options" msprop:Generator_ColumnPropNameInTable="OptionsColumn" msprop:Generator_UserColumnName="Options" type="xs:string" minOccurs="0" />
+              <xs:element name="Weight" msprop:Generator_ColumnVarNameInTable="columnWeight" msprop:Generator_ColumnPropNameInRow="Weight" msprop:Generator_ColumnPropNameInTable="WeightColumn" msprop:Generator_UserColumnName="Weight" type="xs:double" minOccurs="0" />
+              <xs:element name="sortOrder" msprop:Generator_ColumnVarNameInTable="columnsortOrder" msprop:Generator_ColumnPropNameInRow="sortOrder" msprop:Generator_ColumnPropNameInTable="sortOrderColumn" msprop:Generator_UserColumnName="sortOrder" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="FormQuiz" msprop:Generator_TableClassName="FormQuizDataTable" msprop:Generator_TableVarName="tableFormQuiz" msprop:Generator_TablePropName="FormQuiz" msprop:Generator_RowDeletingName="FormQuizRowDeleting" msprop:Generator_RowChangingName="FormQuizRowChanging" msprop:Generator_RowEvHandlerName="FormQuizRowChangeEventHandler" msprop:Generator_RowDeletedName="FormQuizRowDeleted" msprop:Generator_UserTableName="FormQuiz" msprop:Generator_RowChangedName="FormQuizRowChanged" msprop:Generator_RowEvArgName="FormQuizRowChangeEvent" msprop:Generator_RowClassName="FormQuizRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:FormResponse" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="FormQuestion_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:FormQuestion" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="FormQuiz_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:FormQuiz" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

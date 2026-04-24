@@ -1,0 +1,115 @@
+:root {
+    --fox-bg:         #0b0d11;
+    --fox-surface:    #151922;
+    --fox-surface-2:  #1f2633;
+    --fox-border:     #2a3142;
+    --fox-text:       #e6ebf4;
+    --fox-text-dim:   #8b94a8;
+    --fox-accent:     #f4a742;
+    --fox-accent-hot: #ff6b3d;
+    --fox-psk:        #4aa3ff;
+    --fox-wspr:       #3ddc84;
+    --fox-rbn:        #f4a742;
+    --fox-kiwi:       #8b94a8;
+    --fox-danger:     #ff5c5c;
+}
+
+html, body { height: 100%; margin: 0; padding: 0; background: var(--fox-bg); color: var(--fox-text); font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; }
+form { height: 100%; }
+
+.fox-app-shell { display: flex; flex-direction: column; height: 100vh; }
+
+.fox-topnav { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 1rem; background: var(--fox-surface); border-bottom: 1px solid var(--fox-border); height: 56px; box-sizing: border-box; }
+.fox-brand { font-weight: 700; font-size: 1.1rem; color: var(--fox-accent); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+.fox-brand i { font-size: 1.3rem; }
+.fox-nav-link { color: var(--fox-text-dim); text-decoration: none; padding: 0.4rem 0.75rem; border-radius: 4px; font-weight: 500; }
+.fox-nav-link:hover { color: var(--fox-text); background: var(--fox-surface-2); }
+.fox-nav-link.fox-nav-active { color: var(--fox-accent); background: var(--fox-surface-2); }
+.fox-nav-spacer { flex: 1; }
+.fox-nav-status { color: var(--fox-text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; padding: 0.25rem 0.5rem; border: 1px solid var(--fox-border); border-radius: 4px; }
+
+.fox-main { flex: 1; display: flex; min-height: 0; overflow: hidden; }
+
+.fox-sidebar { width: 320px; background: var(--fox-surface); border-right: 1px solid var(--fox-border); padding: 1rem; overflow-y: auto; box-sizing: border-box; }
+.fox-sidebar h3 { margin: 0 0 0.25rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fox-text-dim); }
+
+.fox-field { margin-bottom: 1rem; }
+.fox-field label { display: block; font-size: 0.8rem; color: var(--fox-text-dim); margin-bottom: 0.3rem; }
+.fox-field select, .fox-field input[type=text], .fox-field input[type=number], .fox-field input[type=email] {
+    width: 100%; box-sizing: border-box; padding: 0.5rem 0.6rem; background: var(--fox-surface-2); color: var(--fox-text); border: 1px solid var(--fox-border); border-radius: 4px; font-size: 0.95rem;
+}
+.fox-field textarea { width: 100%; box-sizing: border-box; padding: 0.5rem 0.6rem; background: var(--fox-surface-2); color: var(--fox-text); border: 1px solid var(--fox-border); border-radius: 4px; min-height: 80px; font-family: inherit; }
+
+.fox-range { display: flex; align-items: center; gap: 0.6rem; }
+.fox-range input { flex: 1; }
+.fox-range .fox-range-val { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--fox-accent); min-width: 3.5rem; text-align: right; }
+
+.fox-layer-toggles { display: flex; flex-direction: column; gap: 0.5rem; }
+.fox-layer-toggle { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0.6rem; background: var(--fox-surface-2); border: 1px solid var(--fox-border); border-radius: 4px; cursor: pointer; user-select: none; }
+.fox-layer-toggle input { accent-color: var(--fox-accent); }
+.fox-layer-toggle .fox-swatch { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 50%; }
+.fox-swatch-psk { background: var(--fox-psk); }
+.fox-swatch-wspr { background: var(--fox-wspr); }
+.fox-swatch-rbn { background: var(--fox-rbn); }
+.fox-swatch-kiwi { background: var(--fox-kiwi); }
+.fox-swatch-heat { background: linear-gradient(90deg, #2b6cff, #f4a742, #ff5c5c); }
+
+.fox-btn { display: inline-block; padding: 0.5rem 0.9rem; background: var(--fox-accent); color: #1a1408; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.95rem; }
+.fox-btn:hover { background: var(--fox-accent-hot); color: #fff; }
+.fox-btn-ghost { background: transparent; color: var(--fox-text); border: 1px solid var(--fox-border); }
+.fox-btn-ghost:hover { background: var(--fox-surface-2); color: var(--fox-text); }
+.fox-btn-danger { background: transparent; color: var(--fox-danger); border: 1px solid var(--fox-danger); }
+
+.fox-map-wrap { flex: 1; position: relative; min-width: 0; }
+.fox-map { position: absolute; inset: 0; background: #0a0d14; }
+.fox-map-legend { position: absolute; bottom: 1rem; left: 1rem; background: rgba(21, 25, 34, 0.9); border: 1px solid var(--fox-border); border-radius: 6px; padding: 0.6rem 0.8rem; font-size: 0.8rem; z-index: 500; pointer-events: none; }
+.fox-map-legend h4 { margin: 0 0 0.4rem; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fox-text-dim); }
+.fox-map-legend-row { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.25rem; }
+
+.fox-map-stats { position: absolute; top: 1rem; right: 1rem; background: rgba(21, 25, 34, 0.9); border: 1px solid var(--fox-border); border-radius: 6px; padding: 0.5rem 0.75rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; z-index: 500; }
+.fox-map-stats-row { display: flex; justify-content: space-between; gap: 1rem; }
+.fox-map-stats-row strong { color: var(--fox-accent); }
+
+.fox-map-popup { font-family: 'IBM Plex Sans', sans-serif; font-size: 0.85rem; color: #1a1a1a; }
+.fox-map-popup strong { color: #000; }
+.fox-map-popup .fox-popup-svc-PSK { color: #1b64c4; }
+.fox-map-popup .fox-popup-svc-WSPR { color: #2ba366; }
+.fox-map-popup .fox-popup-svc-RBN { color: #b3791f; }
+
+.fox-page { padding: 1.5rem; overflow-y: auto; width: 100%; box-sizing: border-box; }
+.fox-page h1 { margin: 0 0 1rem; font-size: 1.5rem; font-weight: 600; }
+.fox-page .fox-page-sub { color: var(--fox-text-dim); margin-bottom: 1.5rem; }
+
+.fox-table { width: 100%; border-collapse: collapse; background: var(--fox-surface); border: 1px solid var(--fox-border); border-radius: 6px; overflow: hidden; }
+.fox-table th, .fox-table td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--fox-border); font-size: 0.9rem; }
+.fox-table th { background: var(--fox-surface-2); color: var(--fox-text-dim); font-weight: 500; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.08em; }
+.fox-table tr:last-child td { border-bottom: none; }
+.fox-table tr:hover td { background: var(--fox-surface-2); }
+
+.fox-band-pill { display: inline-block; padding: 0.15rem 0.5rem; background: var(--fox-surface-2); border: 1px solid var(--fox-border); border-radius: 99px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--fox-text-dim); }
+.fox-band-pill-cb { background: rgba(244, 167, 66, 0.15); color: var(--fox-accent); border-color: var(--fox-accent); }
+.fox-band-pill-rdf-yes { background: rgba(61, 220, 132, 0.12); color: var(--fox-wspr); border-color: rgba(61, 220, 132, 0.4); }
+.fox-band-pill-rdf-no { opacity: 0.6; }
+
+.fox-target-card { background: var(--fox-surface); border: 1px solid var(--fox-border); border-radius: 6px; padding: 1rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.fox-target-card-title { font-weight: 600; font-size: 1.05rem; }
+.fox-target-card-meta { color: var(--fox-text-dim); font-size: 0.85rem; margin-top: 0.15rem; }
+.fox-target-card-actions { display: flex; gap: 0.4rem; }
+
+.fox-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 640px; }
+.fox-form-grid-full { grid-column: 1 / -1; }
+.fox-form-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+
+.fox-admin-config-row { display: grid; grid-template-columns: 220px 1fr auto; gap: 0.75rem; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--fox-border); }
+.fox-admin-config-row label { color: var(--fox-text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+
+.fox-empty { text-align: center; color: var(--fox-text-dim); padding: 3rem 1rem; }
+
+/* Leaflet overrides for dark theme */
+.leaflet-container { background: #0a0d14; }
+.leaflet-popup-content-wrapper { background: #fff; color: #1a1a1a; }
+.leaflet-popup-tip { background: #fff; }
+.leaflet-control-attribution { background: rgba(21, 25, 34, 0.85) !important; color: var(--fox-text-dim) !important; }
+.leaflet-control-attribution a { color: var(--fox-accent) !important; }
+.leaflet-bar a { background: var(--fox-surface) !important; color: var(--fox-text) !important; border-color: var(--fox-border) !important; }
+.leaflet-bar a:hover { background: var(--fox-surface-2) !important; }

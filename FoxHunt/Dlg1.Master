@@ -1,0 +1,108 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Dlg1.Master.cs" Inherits="FoxHunt.Dlg" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    lang="en"
+    class="light-style layout-menu-fixed"
+    dir="ltr"
+    data-theme="theme-default"
+    data-assets-path="/assets/"
+    data-template="horizontal-menu-template-no-customizer">
+<head id="Head1" runat="server">
+    <title></title>
+    <link name="mystyle" href="/js/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/js/SiteFunctions.js?ver=4" language="javascript"></script>
+    	<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+	<!-- Related styles of various icon packs and plugins -->
+	<link rel="stylesheet" href="/css/plugins.css">
+
+    
+    <style>
+        /*h1,h2,h3,h4,h5,h6{color:black;}*/
+        body{background-color: #F3F4F4;}
+    html {overflow-y: auto;}
+    .ui-jqgrid .ui-jqgrid-bdiv {overflow-x: hidden;}    
+    .adminMenu{display:none;}
+    .DlgHide{display:none;}
+    </style>
+
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+   <script type='text/javascript'>
+       function createDlg(URL, title, height, width, modal, id, Buttons) {
+           parent.createDlg(URL, title, height, width, modal, id, Buttons);
+       }
+
+       var getCurrentDlg = function () {
+           if (top === self)
+               return false; // Not in an iframe   
+           var iframe = getCurrentIframe();
+           if (!iframe) return false; //Can't find the iframe.. 
+           return iframe;
+       }
+
+       // This is gross. it just gets the iframe you are in. All this just to hide scroll bars
+       function getIframe() {
+           var iframe = null;
+           if (top === self)
+               return false; // Not in an iframe
+           $('iframe', parent.document).each(function (value) {
+               if ($(this).contents().find('body').html() == $(document).contents().find('body').html())
+                   iframe = $(this);
+           });
+           return iframe;
+       }
+
+       function addButtons() { 
+           addButtonsFromFrame({ '.Save': function () { }, "Cancel": function () { return false; } });
+       }
+
+       function closeThis() {
+           var iframe = getIframe();
+           window.parent.closeAll($(iframe).parent().parent().find('.ui-dialog-content').attr('id'));
+       }
+        
+   </script>
+
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            <%--546546--%>
+            <asp:Button ID="Save" runat="server" Text="Save" />
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+ <script type='text/javascript'>
+
+        $(function () {
+            $(".ui-jqgrid-titlebar").hide();
+            addButtons();
+            //addButtonsFromFrame({ '.Save': function () { }, "Cancel": function () { return false; } });
+            $(window).unbind("resize");
+            //var sizeGrids = function () {
+            //    $(".ui-jqgrid-btable").setGridHeight($(window).height() - $(".ui-jqgrid").next().height() - 35);
+            //    $(".ui-jqgrid-btable").setGridWidth($(window).width() - 15);
+            //}
+            //sizeGrids();
+
+            //$(window).resize(sizeGrids);
+        })
+
+     $(function () {
+         $('.toggleSwitch').addClass('switch')
+         $('.toggleSwitch input[type=checkbox]').after('<span class="slider"></span>')
+         $('.toggleSwitch').click(function () {
+             var cb = $(this).find('input[type=checkbox]');
+             if (cb.prop('checked') == false)
+                 cb.prop('checked', true)
+             else
+                 cb.prop('checked', false)
+         })
+     })
+ 
+ </script> 
+    
+</body>
+</html>

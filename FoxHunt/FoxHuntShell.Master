@@ -1,0 +1,51 @@
+<%@ Master Language="C#" CodeBehind="FoxHuntShell.Master.cs" AutoEventWireup="true" Inherits="FoxHunt.FoxHuntShell" %>
+<!DOCTYPE html>
+<html lang="en" class="dark-style" dir="ltr" data-theme="theme-default" data-assets-path="/assets/">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title runat="server">FoxHunt</title>
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/assets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="/assets/vendor/css/core.css" />
+    <link rel="stylesheet" href="/assets/vendor/css/theme-default.css" />
+    <link rel="stylesheet" href="/assets/css/app.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="/assets/css/foxhunt.css?v=1" />
+
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    <asp:ContentPlaceHolder ID="HeadPlaceHolder" runat="server" />
+</head>
+<body>
+<form id="form1" runat="server">
+    <div class="fox-app-shell">
+        <nav class="fox-topnav">
+            <a class="fox-brand" href="/Hunt.aspx">
+                <i class='bx bx-radar'></i> FoxHunt
+            </a>
+            <a class="fox-nav-link" href="/Hunt.aspx">Hunt</a>
+            <a class="fox-nav-link" href="/Targets.aspx">Targets</a>
+            <a class="fox-nav-link" href="/Bands.aspx">Bands</a>
+            <a class="fox-nav-link" href="/Sessions.aspx">Sessions</a>
+            <a class="fox-nav-link" href="/Admin.aspx">Admin</a>
+            <span class="fox-nav-spacer"></span>
+            <span class="fox-nav-status" id="foxNavStatus">idle</span>
+        </nav>
+        <main class="fox-main">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+        </main>
+    </div>
+</form>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<asp:ContentPlaceHolder ID="ScriptPlaceHolder" runat="server" />
+</body>
+</html>

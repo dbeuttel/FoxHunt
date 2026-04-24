@@ -1,0 +1,242 @@
+﻿.programPg {margin: 12px; page-break-after:always;}
+@media print {
+    * {-webkit-print-color-adjust:exact;}
+    @page { margin: 0cm; }
+    body { margin: 0cm;font-family: sans-serif; }
+    .programPg {margin: 0px;}
+    /*a,a:hover, a:visited, a:link, a:active
+    {
+        color:black;
+        text-decoration: none !important;
+        border:0 !important;
+    }*/
+    .inlineEdit{text-decoration:initial;}
+    .ui-widget-content {border: 0;}
+}
+  @page { margin: 0cm; }
+  body { margin: 0cm; font-family: sans-serif;    background: #525659;}
+
+.offset {
+	margin-left: 25px;
+}
+  
+a:visited {
+    color: rgb(0, 0, 238);
+}  
+    
+.toc {
+    width: 600px;
+    list-style-position: inside;
+}
+.subtoc {
+	margin-left: 30px;
+	font-size: 0.9em;
+}
+.pagenum {
+	float: right;
+}
+
+.pagenum:before {
+	content: "Page ";
+}
+
+h3.tocitem {
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 1px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.subtoc h3.tocitem {
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 1px;
+	font-size: 14px;
+	font-weight: normal;
+}
+
+	h3.tocitem:after {
+		content: "................................................................................................................................";
+	}
+.FPTitle
+{
+    color:  rgb(33,149,211);
+    }
+    
+    /* Scroll to top link */
+#to-top {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 10px;
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 22px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #000000;
+    opacity: .05;
+}
+
+#to-top:hover {
+    color: #ffffff;
+    background-color: rgb(33,149,211);
+    text-decoration: none;
+    opacity: 1;
+}
+
+.reportWrapper {
+    margin: auto;
+    width: 1260px;
+    /*display: flex;
+    justify-content: center;*/
+}
+    .programPg
+    {
+    background-image: url('../images/ppea36b797_0a_06.jpg');
+
+	/*height: 1151px;
+	width: 890px;*/
+
+	height: 1587px;
+	width: 1260px;
+
+    padding: 20px;
+    padding-bottom: 0px;
+        border: solid #E9E5DC 1px;
+        background-color: white;
+           /* box-shadow: 5px 3px 13px -2px;*/
+        }
+.programPgInner {
+	padding: 24px;
+	background: white;
+	border: 1px solid rgb(33,149,211);
+	height: 96%;
+	overflow: hidden;
+	/*overflow: hidden;*/
+	/*overflow: auto;*/
+}        
+.bodyText, body
+{
+    color: #000000; font-family: sans-serif;
+    font-size: 10pt;
+    }
+.bodyTitle
+{
+    font-weight: bold; text-decoration: underline;
+    }
+
+h1
+{
+
+    }
+
+h2 
+{
+    color: 	rgb(33,149,211); font-family: sans-serif;
+    font-size: 18pt;
+     font-weight: bold; text-decoration: underline;
+     /*text-align:center;*/
+         margin: 0;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    }
+    ul
+    {
+        margin-top:0px;
+        }
+@media print {
+    * {-webkit-print-color-adjust:exact;}
+  @page { margin: 0cm; }
+  body { margin: 0cm; }
+  .float_button{display:none;}
+}
+
+.Goal{
+
+}
+.Objective{
+    margin-left: 30px;
+}
+.Strategy{
+    margin-left: 60px;
+}
+.Initiative,.Program{
+    margin-left: 90px;
+}
+
+.Measure{
+    margin-left: 120px;
+}
+
+.formLabel h1 {
+    display: inline-block;
+    padding: 4px;
+    margin: 5px;
+    margin-left: -10px;
+    margin-top:15px;
+}
+
+.heading, .heading .row {
+	margin-bottom: 8px !important;
+}
+
+.encounter .heading {
+	background-color: #baddef !important;
+}
+
+.labs .heading {
+	background-color: #d7c2ea !important;
+}
+
+
+.pat, .pat .row, .pat .row:nth-child(odd), .pat .row:nth-child(even) {
+	/*background-color: #eeeeee;*/
+	background-color: #83c4dc;
+	float: inherit;
+	margin: inherit;
+	padding: inherit;
+	border: inherit;
+	width: inherit;
+}
+
+
+	.heading h4 {
+		font-size: 16px;
+	}
+
+a:visited {
+	color: #337ab7;
+}
+
+.pagenum {
+	position: relative;
+	bottom: 1px;
+}
+
+.label {
+	color: inherit;
+}
+.allerg .row:nth-child(odd) {
+    background-color:#c6e0b4 !important;
+}
+.allerg .row:nth-child(even) {
+    background-color:#E2EFDA !important;
+}
+.allergy .heading {
+    background-color:#70AD47 !important;
+}
+.bccp .row:nth-child(even) {
+
+}
+
+.med .row:nth-child(even) {
+    background-color:#ffdddd !important;
+}
+.med .row:nth-child(odd) {
+    background-color:#ffc9c9  !important;
+}
+.medication .heading {
+    background-color:#c45050 !important;
+}

@@ -1,0 +1,555 @@
+﻿<%@ Master Language="C#" CodeBehind="Site11.Master.cs" AutoEventWireup="true" Inherits="FoxHunt.Site11" %>
+
+<%@ Register Assembly="DTIControls" Namespace="DTIAdminPanel" TagPrefix="cc1" %>
+<!DOCTYPE html>
+<style type="text/css">
+
+	.BottomDock {
+    bottom: 78px;
+    display: block;
+    overflow: hidden;
+    position: fixed;
+    right: 15px;
+    visibility: visible;
+    z-index: 1000;
+}
+	.newStyle1 {
+		color: #FFFFFF;
+	}
+
+	.elecoption{
+		color:black!important;
+	}
+
+	.auto-style1 {
+		color: #FFFFFF;
+		font-size: large;
+	}
+
+	.btn {
+		white-space: normal !important;
+	}
+	.DTIGraph {
+    float: left;
+    padding: 15px;
+}
+		.DTIGraph:last-child {
+			clear: both;
+    float: none;
+		}
+    .DTIReportEnd {
+    clear:both;
+    }
+    .ui-jqgrid-caption {
+    display:none;
+    }
+    html, body {position: relative}
+	.pull-left {
+    float: left !important
+}
+
+.pull-right {
+    float: right !important
+}
+
+.pull-none {
+    float: none !important
+}
+.hidden{
+	display:none;
+}
+</style>
+<%--<style lang="scss">
+    .pull-right{
+		@extend .float-right;
+	}
+</style>--%>
+<!--[if IE 9]>         <html class="no-js lt-ie10"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<!--<![endif]-->
+<head runat="server">
+	<meta charset="utf-8">
+	<title runat="server">BOE Precinct Official</title>
+	<meta name="description" content="">
+	<meta name="robots" content="noindex, nofollow">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+
+	<!-- Icons -->
+	<!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+	<link rel="shortcut icon" href="/images/logo.png" style="width: 50px;">
+	<link rel="apple-touch-icon" href="/images/logo.png" sizes="120x120">
+	<!-- END Icons -->
+
+	<!-- Stylesheets -->
+	<!-- Bootstrap is included in its original form, unaltered -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+	<!-- Related styles of various icon packs and plugins -->
+	<link rel="stylesheet" href="/css/plugins.css">
+
+	<!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+	<link rel="stylesheet" href="/css/main.css?ver=7">
+
+	<!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+	<link rel="stylesheet" href="/css/themes.css?v=7">
+	<!-- END Stylesheets -->
+	<link rel="stylesheet" href="/css/themes/county.css?v=7">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/css/FontAwesomecss/font-awesome.min.css">
+	<!-- Modernizr (browser feature detection library) -->
+	<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap-select.min.css">
+	<script src="/js/bootstrap-select.min.js"></script>
+
+	<style type="text/css">
+		#upload ul li {
+			height: 67px !important;
+		}
+
+		#drop a {
+			display: inline-block !important;
+		}
+
+		#upload ul li p {
+			left: 150px !important;
+		}
+
+		.flag-icon {
+			margin: 4px;
+			width: 1.5em;
+			line-height: 1.2em;
+		}
+	    .bottomFixed {
+	position: fixed;
+    bottom: 5px;
+    background-color: lightgray;
+    padding: 5px;
+    border: 1px solid;
+    box-shadow: 3px -1px 12px black;
+		}
+	</style>
+	<script type="text/javascript">
+        function selectCode(barcode) {
+               console.log("select barcode:" + barcode);
+            $("[barcode=" + barcode + "]").attr('checked', true);
+           }
+    </script>
+	<script type="text/javascript">
+        function noFill() { $("input").each(function () { $(this).attr("autocomplete", "one-time-code") }) }
+        $(function () { noFill(); })
+</script>
+</head>
+<body id="tbBackgroud" <%--style="background-color: #112358"--%>>
+	<!-- Page Container -->
+	<!-- In the PHP version you can set the following options from inc/config file -->
+	<!-- 'boxed' class for a boxed layout -->
+	<form id="form1" runat="server">
+		<canvas width="300" height="300" id="mycanvas" style="display: none;"></canvas>
+<%--		<%@ Register Assembly="DTIControls" Namespace="DTIAdminPanel" TagPrefix="admn" %>
+		<admn:DTIAdminPanel ID="AdminPanel" runat="server" />--%>
+		<div id="page-container" class="boxed">
+			<!-- Site Header -->
+			<header>
+				<div class="container">
+					<!-- Site Logo -->
+					<site-logo>
+                        <a href="/default.aspx" style="position: absolute;">
+                         <img class="headerImg notransition" id="logotrans" src="/images/translogo.png"></a>
+                       <img class="headerImg" id="logo1" src="/images/LogoHeader.png" />
+					   </site-logo>
+
+
+<%if(!HttpContext.Current.Request.Url.Host.ToLower().Contains("precinctofficialsadmin.dconc.gov")){%>
+
+<div id="dev"></div>
+
+<style>
+    #dev {
+      background: red;
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top:15px;
+      text-align: center;
+
+    }
+
+    #dev:before,
+
+    #dev:after {
+      content: "   DEV";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 40px;
+      width: 40px;
+      background: red;
+	  line-height: 2.5rem;
+    }
+
+    #dev:before {
+      transform: rotate(-60deg);
+    }
+
+    #dev:after {
+      transform: rotate(-30deg);
+</style>
+
+<%}%>
+					<%-- <a href="/caseForm.aspx" style="font-weight:bolder; color:White; font-family:Arial ">Submit Form</a>--%>
+                       &nbsp;
+                    <!-- END Site Logo -->
+					<!-- Site Navigation -->
+
+<%--					<script src="js/bootstrap-datepicker.js"></script>
+					<script>
+						$(function () {
+							$('.datepicker').datepicker({
+								format: 'mm-dd-yyyy'
+							});
+						});
+					</script>--%>
+					
+					<nav>
+						<!-- Menu Toggle -->
+						<!-- Toggles menu on small screens -->
+
+						<a href="javascript:void(0)" class="btn btn-default site-menu-toggle d-lg-none">Menu</a>
+						<!-- END Menu Toggle -->
+
+						<!-- Main Menu -->
+						<%--  <cc1:Menu ID="sitenav" class="sitenav" runat="server" RenderMode="Span" Template="Simple" SelectParentPage="false" SelectedCss="active">
+                                <ul >
+                                   <cc1:MenuItem ID="menuitem1" runat="server"><li><a href="req.apsx">Request</a></li></cc1:MenuItem>
+                                   <cc1:MenuItem ID="menuitem2" runat="server"><li><a href="return.apsx">Return</a></li></cc1:MenuItem>
+                                   <cc1:MenuItem ID="menuitem5" runat="server"><li><a href="Reports.apsx">Reports</a></li></cc1:MenuItem>
+                                   <cc1:MenuItem ID="menuitem4" runat="server"><li><a href="Grid.apsx">Grid</a></li></cc1:MenuItem>
+                                </ul>
+                            </cc1:Menu> --%>
+						<span class="sitenav">
+							<ul>
+                                <%--<li><a href="/Default.aspx">Main</a>
+                                </li>--%>
+								<li><div class="col-12 col-sm-12 col-md-12 float-right elections" style="color:black!important;">
+					<%--<div class="float-right elections" style="">--%>
+									
+						<%--<a href="javascript:void(0)" style="color:black!important; <%=secPrimary%> " class="btn btn-default CurrentElection">
+							<%=Data.currentElection.description %></a>--%></div>
+									
+
+								</li>
+                                <li><a href="/reports.aspx">Reports</a>
+									<ul>
+										<li><a href="/PrintReports/PrintReport.aspx">Polling Place Specific</a></li>
+									</ul>
+                                </li>
+								<%if (true)
+									{%>
+								<li><a href="/PrescinctOfficials/PrescinctOfficialSearch.aspx">Precinct Officials</a>
+									<ul>
+										
+										<%--<li><a href="/PrescinctOfficials/PrescinctOfficialsInterviewee.aspx">Upcomming Interviews</a></li>
+										<li><a href="/PrescinctOfficials/PrescinctOfficials.aspx">Full Directory</a></li>--%>
+									</ul>
+								</li>
+								<li><a href="/Events/Events.aspx">Events</a>
+									<ul>
+										<li><a href="/Events/Events.aspx">Event List</a></li>
+										<li><a href="/Events/EventAttendance.aspx">Event Attendance</a></li>
+										<li><a href="/Events/interviews.aspx">Interviews</a></li>
+										<li><a href="/Events/interviewsignups.aspx">Interview Signups</a></li>
+									</ul>
+								</li>														
+								<li><a href="/Notifications/EditEmails.aspx">Notifications</a>
+									<ul>
+										<li><a href="/Notifications/EditEmails.aspx">Notification Emails</a></li>
+										<li><a href="/Notifications/EditEmailStatusChange.aspx">Status Change Notifications </a></li>
+										<li><a href="/Notifications/NotificationSchedule.aspx">Schedule Notifications</a></li>
+										<li><a href="/Notifications/bulksend.aspx">Manual/Bulk Send</a></li>
+										<li><a href="/Notifications/EditEmailTemplates.aspx">Email Template</a></li>
+										<li><a href="/Notifications/EmailTester.aspx">Email Tester</a></li>
+										<li><a href="/Notifications/NotificationSendList.aspx">Edit Send List</a></li>
+									</ul>
+								</li>	
+								<li><a href="/Assignments/Assignments.aspx">Precinct Assignments</a>
+									<ul>
+										<li><a href="/Assignments/Assignments.aspx">Assignment Grid</a></li>
+										<%--<li><a href="/Assignments/Assignments.aspx?site=ol">Internal Temp Assignments</a></li>--%>
+										<%--<li><a href="/Assignments/AssignmentsOpen.aspx">Open Slots</a></li>--%>
+										<li><a href="/Assignments/TimeSlotEditor.aspx">Timeslot Editor</a></li>
+										<li><a href="/Assignments/TimeSlotUpload.aspx">Upload Timeslots</a></li>
+										<li><a href="/Assignments/TimeSlotList.aspx">Timeslot Grids</a></li>
+										<%--<li><a href="/Assignments/TimeSlotListOS.aspx">Time Slot List (One Stop)</a></li>
+										<li><a href="/Assignments/TimeSlotListED.aspx">Time Slot List (Election Day)</a></li>
+										<li><a href="/Assignments/TimeSlotListOther.aspx">Time Slot List (Other Locations)</a></li>--%>
+									</ul>
+								</li>	
+									<%if (true) {%>
+									
+                                <li><a href="#">Admin</a>
+									 <ul>										
+                                    <li><a href="/Users.aspx">Edit Users</a></li>
+										 <li><a href="/Admin/SiteSettings.aspx">Sitewide Settings</a></li>
+										 <li><a href="/Admin/EditDDl.aspx">Edit Drop Downs</a></li>
+										 <li><a href="/Admin/Roles.aspx">Edit Roles</a></li>
+										 <li><a href="/Admin/OtherLocations.aspx">Other Locations</a></li>
+										 <li><a href="/QueryBuilder.aspx" target="_blank">Query Builder</a></li>
+										 <%--<li><a href="/PrintAll.aspx">Print all current reports</a></li>--%>
+										 <li><a href="/admin/ImportExtUsers.aspx">Import External Users</a></li>
+										 <li><a href="/admin/ImportAvailability.aspx">Import User Availability</a></li>
+										 <li><a href="/assignments/nominationsupload.aspx">Import Nominations</a></li>
+										 <li><a href="/nominationgrid.aspx">Nominations Grid</a></li>
+										 <li><a href="/appointmentgrid.aspx">Appointment Grid</a></li>
+										 <li><a href="/assignments/substitutegrid.aspx">Substitute Grid</a></li>
+										 <li><a href="/Events/LMSIntegration.aspx">LMS Integration</a></li>
+										 <li><a href="/PrescinctOfficials/Payroll.aspx">Payroll</a></li>
+                                    </ul>
+                                </li>
+									<%} %>
+								<%} %>
+							</ul>
+						</span>
+						<!-- END Main Menu -->
+					</nav>
+					
+					<!-- END Site Navigation -->
+					<%--  <a href="AddTree.aspx"  ><span style="  float: right; margin-top: 21px;" class="auto-style1">Band Tree</span></a>--%>
+				</div>
+			</header>
+			<!-- END Site Header -->
+			<%--    <edit:EditPanel ID="editHeader" runat="server" CssClass="">  
+        <section class="site-section site-section-top site-section-light themed-background-dark">
+            <div class="container text-center">
+                <h1 class="animation-fadeInQuickInv"><strong>Awesome Title</strong></h1>
+            </div>
+        </section>
+    </edit:EditPanel>--%>
+			<section class="site-section site-section-light themed-background-dark">
+			</section>
+
+
+			<section class="site-content site-section border-bottom" style="/*background-color: white*/">
+				<div class="container MainContainer"><br />
+					<asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+				</div>
+				<br />
+				<br />
+				<br />
+			</section>
+
+<div id="toolbar" class="BottomDock">
+ <a href="javascript:void(0)" onclick="return userSearch();">
+ <img src="/images/search.png" border="0px" width="30px" height="30px "></a>
+ </div>			
+
+			<!-- Footer -->
+			<footer class="hidden site-footer site-section site-section-light ">
+				<div class="container">
+					<!-- Footer Links -->
+					<div class="row">
+						<cc1:Menu ID="MenuFooter" class="col-sm-4" runat="server" Template="Simple" SelectParentPage="false" SelectedCss="active">
+							<h4 class="footer-heading">Menu</h4>
+							<ul class="footer-nav ul-breath list-unstyled">
+								<cc1:MenuItem ID="menuitem3" runat="server">
+									<li><a href="<%= Page.ResolveUrl("~/") %>##link##">##Name##</a></li>
+								</cc1:MenuItem>
+							</ul>
+						</cc1:Menu>
+					</div>
+					<!-- END Footer Links -->
+				</div>
+			</footer>
+			<!-- END Footer -->
+
+		</div>
+		<!-- END Page Container -->
+	</form>
+	<!-- Scroll to top link, initialized in js/app.js - scrollToTop() -->
+	<a href="#" id="to-top"><i class="fa fa-arrow-up"></i></a>
+
+	<!-- Include Jquery library from Google's CDN but if something goes wrong get Jquery from local file -->
+	<%--        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/vendor/jquery-2.1.3.min.js"%3E%3C/script%3E'));</script>--%>
+
+	<!-- Bootstrap.js, Jquery plugins and Custom JS code -->
+	<script type="text/javascript" src="/js/vendor/bootstrap.bundle.js?ver1.0"></script>
+	<script type="text/javascript">$.fn.button.noConflict();</script>
+
+<%--	<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />--%>
+	<%--<script src="/js/bootstrap-dialog.min.js"></script>--%>
+	<script src="/js/bootbox.min.js"></script>
+	<script>BootstrapDialog = bootbox;BootstrapDialog.show = bootbox.dialog;</script>
+
+	<script>
+		var lang = "eng";
+        <%if (DTIControls.Share.MainId == 3){%>lang = "esp";<%}%>
+		$(function () {
+            if (!$(".DTIGrid > div").last().isOnScreen())
+				if ($(".DTIGrid > div").last().find("input:visible").length>0)
+					$(".DTIGrid > div").last().addClass("bottomFixed");
+			if (lang == "esp") {
+				$(".headerImg").attr('src', '/images/dssSpanish.png')
+			}
+			$(".langSelect a").each(function () {
+				var rep = window.location.href;
+				if (rep.indexOf("?") == -1) rep = rep + "?";
+				else rep = rep + "&";
+				$(this).attr("href", $(this).attr("href").replace("/default.aspx?", rep));
+			});
+		})
+    </script>
+
+	<script type="text/javascript" src="/js/app.js?ver=9"></script>
+	<script type="text/javascript" src="/js/device.js?ver=7"></script>
+	<script>
+        function getElectionList() {
+            if ($(".otherElec").length)
+                $(".otherElec").slideUp(function () { $(".otherElec").remove(); });
+            else {
+                $.get("/default.aspx?ElectionList=Y", function (d) {
+                    var x = $.parseJSON(d);
+                    var container = $("<div>")
+                        .attr("class", "otherElec")
+                        .hide();
+                    $(".elections").append(container);
+                    for (var i = 0; i < x.rows.length; i++) {
+                        var r = x.rows[i];
+                        var itm = $("<a>")
+                            .text(r.description)
+                            .attr("href", "/default.aspx?ElectionId=" + r.id)
+                            .attr("class", "btn elecoption btn-default col");
+                        if ($(".CurrentElection").text().trim() == r.description.trim())
+                            itm.addClass("btn-success")
+                        container.append(itm);
+                    }
+                    container.slideDown()
+                });
+            }
+        }
+
+        $(function () {
+            $(".CurrentElection").click(getElectionList); 
+        });
+
+
+		function updateAreas(filterList, delay) {
+			var refArea = function () {
+				if (!$(".bootbox.modal").is(":visible")) {
+					doRefresh(filterList);
+					setTimeout(function () { $('button, input:submit, input:button, input:reset').unbutton(); }, 50);
+				}
+			}
+			if (delay == null) {
+				
+			} else {
+				if (delay < 10000)
+					delay = 10000;
+				setInterval(refArea, delay);
+			}
+		}
+
+        function userSearch() {
+            setDlgIcon("/images/search.png", createDlg('/userSearch.aspx?d=y', 'User Lookup', 450, 750, true));
+        }
+
+        function userAdd() {
+            setDlgIcon("/images/search.png", createDlg('/userSearch.aspx?d=y&dosearch=y', 'Add User', 450, 750, true));
+        }
+
+    </script>
+		<script src="/js/JsBarcode.all.min.js"></script>
+	<script type="text/javascript">
+        function setBarcode(item, code, text) {
+            var data = { format: "code39", width: 2 }
+            if (code == null)
+                code = $(item).attr("code");
+            if (text == null)
+                text = $(item).attr("text");
+            if (text != null) data.text = text.substring(0, 15);
+            if (code != null)
+                $(item).JsBarcode(code, data);
+        }
+        $(function () {
+            $("svg.barcode").each(
+                function () {
+                    setBarcode(this);
+                }
+            );
+		});
+		function loadNRefresh(inUrl) {
+			$.ajax({ url: inUrl }).done(function () { window.location.reload(); })
+			
+		}
+    </script>
+       <script>
+           $(function () {
+               var urlParams = new URLSearchParams(window.location.search);
+               var barcode = urlParams.get('barcode');
+               if (barcode && barcode.length > 0)
+                   setTimeout(function () { selectCode(barcode); }, 600);
+           });
+
+           var barcode = '';
+           var interval;
+           var inbarcode = false;
+           document.addEventListener('keydown', function (evt) {
+               if (interval) {
+                   clearInterval(interval);
+               }
+               if (evt.code == 'Enter') {
+                   if (barcode) {
+                       $('#barcode').val(barcode);
+                       selectCode(barcode);
+
+                   }
+                   barcode = '';
+                   return;
+               }
+               if (evt.key != 'Shift') {
+                   barcode += evt.key;
+               } else { inbarcode = true; }
+               interval = setInterval(function () { barcode = ''; inbarcode = false; }, 25);
+               if (inbarcode) {
+                   evt.preventDefault();
+               }
+           });
+
+        //
+
+		   function showProfile(profileID) {
+			   createDialogURL("/PrescinctOfficials/Profile.aspx?d=y&id=" + profileID, 900, 1240, null, "Profile", true);
+		   }
+
+           function showEvent(eventID) {
+               createDialogURL("/Events/EventEdit.aspx?d=y&id=" + eventID, 600, 900, null, "Event", true);
+           }
+
+       </script> 
+
+	<style type="text/css">
+@media (min-width: 576px) {
+    .card-columns {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 768px) {
+    .card-columns {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 992px) {
+    .card-columns {
+        column-count: 5;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card-columns {
+        column-count: 6;
+    }
+}
+
+	</style>
+</body>

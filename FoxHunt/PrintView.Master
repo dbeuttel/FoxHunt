@@ -1,0 +1,822 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="PrintView.master.cs" Inherits="FoxHunt.PrintViewMaster" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Print View</title>
+    <script src="/js/html2canvas.min.js"></script>
+    <script src="/js/jspdf.umd.min.js"></script>
+    <script type="text/javascript">
+        function setBarcode(item, code, text) {
+            var data = { format: "code39", width: 2 }
+            $.each(item.attributes, function (i, attrib) {
+                data[attrib.name] = attrib.value;
+            })
+            if (code == null)
+                code = $(item).attr("code");
+            if (text == null)
+                text = $(item).attr("text");
+            if (text != null) data.text = text.substring(0, 20);
+
+            if (code != null)
+                $(item).JsBarcode(code, data);
+        }
+        $(function () {
+            $("svg.barcode").each(
+                function () {
+                    setBarcode(this);
+                }
+            );
+        });
+    </script>
+
+    <link href="/css/bootstrap.min.css?v=1" rel="stylesheet" />
+    <link href="/css/bootstrap.min.print.css?v=2" rel="stylesheet" />
+    <!-- Related styles of various icon packs and plugins -->
+    <link rel="stylesheet" href="~/css/plugins.css">
+
+    <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+    <link rel="stylesheet" href="~/css/main.css?ver=7">
+
+    <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+    <link rel="stylesheet" href="~/css/themes.css?v=7">
+    <!-- END Stylesheets -->
+    <link rel="stylesheet" href="~/css/themes/county.css?v=7">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/css/FontAwesomecss/font-awesome.min.css">
+    <style type="text/css">
+        h1, h2, h3, h4, h5, h6 {
+            color: black;
+        }
+
+        .page {
+            width: 612px;
+            height: 792px;
+            border: 1px solid black;
+            margin: 20px;
+            position: relative;
+        }
+
+       .page .content .column {
+                text-align: justify;
+                font-size: 10pt;
+       }
+
+       .page .content .column blockquote {
+            border-left: 2px solid #999999;
+            background: #DEDEDE;
+            padding: 10px;
+            margin: 4px 20px;
+            clear: both;
+       }
+
+        .page .content .column img {
+            float: left;
+            margin: 10px;
+        }
+
+        .page .content .column p {
+            padding: 0 10px;
+            margin: 10px 0;
+        }
+        /*.page .content .column h1{ padding: 0 10px; }*/
+        .page .header {
+            text-align: center;
+            font-size: 18pt;
+            font-family: helvetica, arial;
+            padding: 20px 0 0;
+        }
+
+        .page .header hr, .page .footer hr {
+            width: 400px;
+        }
+
+        .page .footer {
+            text-align: center;
+        }
+
+        .page .footer span {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        /*        #page_template, #allcontent {
+            display: none;
+        }
+*/
+        .enclosure {
+            border: 1px dashed black
+        }
+
+        .printHidden {
+            display: none;
+        }
+
+        .printButton {
+            display: none;
+        }
+
+        .formsec {
+            text-align: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .printlaunch {
+            /*padding:20px;*/
+            background-color: lightgray;
+            text-decoration: none !important;
+            color: black !important;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+            padding: .5em 1em !important;
+            border-radius: 5px;
+            right: 50px;
+            top: 20px;
+            position: absolute;
+            z-index: 9;
+        }
+
+        .printlaunch:hover {
+            background-color: gray;
+        }
+
+        /*STANDARDIZES TABLE FORMATTING AND COLOR*/
+        .table th {
+            background-color: lightblue;
+        }
+
+        .table {
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .table tr:nth-child(even) {
+            background: lightgray;
+        }
+
+        .rotated {
+            transform: rotate(90deg) translateY(-118px) translateX(385px);
+            width: 1500px;
+        }
+
+        .reportStatus {
+            background-color: #50535e55;
+        }
+
+        .modal-content {
+            padding: 26px;
+            font-size: large;
+            border: 1px solid;
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+        #progressContainer {
+            margin-top: 5px;
+            width: 100%;
+            background-color: #ddd;
+            height: 20px;
+            border: 1px solid black;
+        }
+
+        @media print {
+            .d-print-none {
+                display: none !important;
+            }
+
+            .pagebreak {
+                page-break-after: always;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="css/shapes.css" />
+    <link rel="stylesheet" href="css/report.css?v=1.0" />
+    <style>
+        .programPgInner {
+            overflow-y: auto;
+            height: 98%;
+        }
+    </style>
+
+
+    <script type="text/javascript" language="javascript"> 
+        const PrintParms = new URLSearchParams(window.location.search);
+
+        var ifr = window.frameElement;
+        function printpg() {
+            //$('#' + ifr.id, top).get(0).contentWindow.focus();
+            //$('#' + ifr.id, top).get(0).contentWindow.print();
+            self.focus();
+            self.print();
+
+            //ifr.focus();
+            //ifr.print();
+            return true;
+        }
+
+
+        //$(function () {
+        //    setTimeout(printLoad, 1);
+        //});
+
+
+
+        function printLoad() {
+            $('meta[name="viewport"]').prop('content', 'width=1200');
+            $("body").show().css("opacity", 1);
+
+            $("li").each(function () {
+                if ($(this).text().trim() == "") {
+                    $(this).hide()
+                }
+            })
+
+            $(".toc a").each(function () {
+                $(this).wrap("<h3>").parent().addClass("tocitem");
+            });
+
+            buildPrintView().then(function () {
+
+                $(".toc a").each(function () {
+                    //$(this).wrap("<h3>").parent().addClass("tocitem");
+                    var txt = "";
+                    var href = $(this).attr("href").replace("#", "");
+                    txt += $("a[name='" + href + "']").closest(".programPg").find(".footer").text();
+                    txt = txt.replace("Page:", "").trim();
+                    var s = $("<span>")
+                        .text(txt)
+                        .css("float", "right")
+                        .addClass("pagenum")
+                        .appendTo($(this).parent());
+                });
+                finishPrintView();
+            });
+
+            /*$("body").find('input.hasDatepicker')
+                 .removeClass('hasDatepicker')
+                 .removeData('datepicker')
+                 .unbind()
+                 .datepicker();*/
+
+            //var rec = getUrlVars()["rec"];
+            //var id = getUrlVars()["id"];
+            //var urlStr = 'rec=' + rec + '&id=' + id;
+            //var urlStr = window.location.href.slice(window.location.href.indexOf('?') + 1);  //'rec=' + rec + '&id=' + id;
+
+            //anchorize();
+            //"Save as PFD": function () { return printPDF(); },
+            //"Save as word": function () { return redirectToWord(); },
+            //addButtonsFromFrame({ "Print": function () { return printpg(); }, "Cancel": function () { return false; } });
+            //scrollToTop();
+            // $("#map").prop("src", "MapView.aspx?h=y&d=y&z=auto&scroll=n&" + urlStr);
+        }
+        //function addButtons() { }
+        //function addButtonsOnLoad() { }
+
+        function scrollToTop() {
+            // Get link
+            var link = $('#to-top');
+
+
+            $(window).scroll(function () {
+                var windowW = window.innerWidth
+                    || document.documentElement.clientWidth
+                    || document.body.clientWidth;
+                // If the user scrolled a bit (150 pixels) show the link in large resolutions
+                if (($(this).scrollTop() > 150) && (windowW > 991)) {
+                    link.fadeIn(100);
+                } else {
+                    link.fadeOut(100);
+                }
+            });
+
+            // On click get to top
+            link.click(function () {
+                $('html, body').animate({ scrollTop: $("#toc").position().top }, 400);
+                return false;
+            });
+        };
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            await setStatus("Preparing view...");
+            await buildPrintView();
+        });
+
+        var contentSelector = "#allcontent";
+        var $status;
+        var $statusMsg;
+        var currentmsg = null;
+        var statusInterval = null;
+
+        async function setStatus(msg, progress = null) {
+            if (progress == null &&  $("#allcontent").length >0){
+                progress =  ((startingHeight - $("#allcontent")[0].scrollHeight)/startingHeight ) * 100;
+            }
+            if (progress !== null){
+                progress = Math.round(progress);
+                $('#progressContainer').show();
+                $('#progressBar').css('width', progress + '%').text(progress + '%');
+            } else
+                $('#progressContainer').hide();
+
+            currentmsg = msg;
+            if (currentmsg != null) {
+                if (!$status) {
+                    $status = $("#printStatus");
+                    $statusMsg = $status.find(".statusMsg");
+
+                }
+                $status.fadeIn();
+                $statusMsg.html(currentmsg);
+                await new Promise(requestAnimationFrame);
+                currentmsg = null;
+            }
+            await new Promise(requestAnimationFrame);
+            console.log(msg);
+        }
+
+
+        function closeStatus() {
+            if (!$status) {
+                $status = $("#printStatus");
+                $statusMsg = $status.find(".statusMsg");
+
+            }
+            $status.hide();
+        }
+
+        var lastheight = 0;
+        var content_height = 1000;	// the height of the content, excluding the header/footer
+        var page = 1;				// the beginning page number to show in the footer
+        var $page = null;
+        var pagelist = [];
+        var $tmpPage = null;
+        var $tmpPageContent = null;
+        var startingHeight = 0;
+        async function buildPrintView() {
+            if ($(contentSelector).contents().length > 0 && page < 100 && ($(".page:last .content .column").length == 0 || $(".page:last .content .column").first().text() != "")) {
+                // when we need to add a new page, use a jq object for a template
+                // or use a long HTML string, whatever your preference
+                startingHeight = $("#allcontent")[0].scrollHeight;
+                $tmpPage = $("#page_template").clone().addClass("page").css("display", "block");
+                $tmpPageContent = $tmpPage.find(".content");
+                $(".reportWrapper").append($tmpPage);
+                $("#page_template").hide();
+                await addpg();
+                content_height = $page[0].scrollHeight;
+                if ($("table").floatThead)
+                    await $("table").floatThead('destroy');
+                $(contentSelector).show();
+                currentItem = contentSelector;
+                
+                //if (confirm("do it?"))
+                    iterateOverElement($(contentSelector)).then(finishPrintView);
+                //else
+                //    closeStatus();
+            }
+        }
+
+        function finishPrintView() {
+            console.log("Finishing process")
+            $("#page_template").remove();
+            $("#ContentPage").remove()
+            $(".highslide-container").hide();
+            if ($tmpPage) {
+                $tmpPage.remove();
+                $("#allcontent").remove()
+                $('head').append('<style>.programPgInner{overflow:hidden;}</style>');
+                //$(".programPgInner").css("height", "98%");
+                if (pagelist[pagelist.length - 1].find(".content").text() == "")
+                    pagelist.pop().remove(); //remove last blank page
+
+            }
+            //setTimeout(function () { closeStatus()},500)
+            closeStatus();
+            setTimeout(function () {
+                closeStatus();
+                if (PrintParms.get("PDF") === "Y")
+                    createPDF();
+            }, 500);
+        }
+
+        async function addpg(allowempty) {
+            if ($page) {	//Don't add a blank page.
+                if ($page.text() == "")
+                    return;
+            }
+            $page = $("#page_template").clone().addClass("page").css("display", "block");
+            pagelist.push($page);
+            // fun stuff, like adding page numbers to the footer
+            $page.find(".footer span").append(page);
+            $(".reportWrapper").append($page);
+            $page = $page.find(".content");
+            page++;
+            $lastElement = null;
+            await new Promise(requestAnimationFrame);
+            setStatus("Building report page: " + page);
+        }
+
+        var updtcounter = 0;
+        var spaces = 0;
+        var accessnum = 0;
+        var $lastElement = null;
+        var currentItem = null;
+        var currentWrap = null;
+        var applyWrap = false;
+
+        async function iterateOverElement(item, wrapItem) {
+            currentItem = item;
+            currentWrap = wrapItem;
+            spaces += 1;
+            accessnum += 1;
+            console.log('-'.repeat(spaces) + "[adding]" + accessnum);
+            if (!wrapItem) wrapItem = "";
+            //$(item).contents().each(async function () {
+            //    $lastElement = await addElem($(this), wrapItem, $lastElement);
+            //});
+            const children = $(item).contents().toArray();
+
+            for (const child of children) {
+                if (!(child.nodeType == 3 && child.textContent.trim() == ""))
+                    $lastElement = await addElem($(child), wrapItem, $lastElement);
+                //await new Promise(requestAnimationFrame); // Yield every element
+            }
+
+            currentItem = null;
+            currentWrap = null;
+            spaces -= 1;
+
+            return $lastElement;
+        }
+
+        async function addElem($elem, wrapItem) {
+            if (!wrapItem) wrapItem = "";
+            await new Promise(requestAnimationFrame);
+
+            if ($elem.hasClass("pagebreak")) {
+                await addpg();
+            } else {
+                var elemHeight = getHeight($elem);
+                if (elemHeight <=0 )
+                    $elem.appendTo($page);
+                else if (willElementFit($elem)) {
+                    if ($lastElement) {
+                        $lastElement.after($elem);
+                    } else {
+                        $elem.appendTo($page);
+                        if (wrapItem != "") 
+                            $elem.wrap(wrapItem);
+                    }
+                    $lastElement = $elem;
+                } else {
+                    //If current element is greater than 80% of a page, break it up. Otherwise just add it to the next page.
+                    if ($elem[0].nodeType != 3 && elemHeight > content_height * 0.8) {
+                        var addclass = "";
+                        var addstyle = "";
+                        if (typeof $elem.attr("style") != "undefined")
+                            addclass = " style='" + $elem.attr("style") + "' ";
+                        if (typeof $elem.attr("class") != "undefined")
+                            addclass = " class='" + $elem.attr("class") + "' ";
+                        if ($elem.prop("tagName") == "TABLE")
+                            $lastElement = await iterateOverTable($elem[0], newwrap);
+                        else {
+                            var newwrap = wrapItem + "<" + $elem.prop("tagName") + addclass + addstyle + "'>"
+                            $lastElement = null;
+                            await iterateOverElement($elem, newwrap);
+                        }
+                    } else {
+                        await addpg();
+                        //setStatus("added page #" + page);
+                        $elem.appendTo($page);
+                        $lastElement = null;
+                        if (wrapItem != "") {
+                            $elem.wrap(wrapItem);
+                            $lastElement = $elem;
+                        }
+                    }
+                }
+            }
+            return $lastElement;
+        }
+
+
+        async function iterateOverTable(table, wrapItem) {
+            if (!(table instanceof HTMLTableElement)) {
+                console.error("Provided element is not a table.");
+                return;
+            }
+
+
+            const thead = table.querySelector('thead');
+            const tbody = table.querySelector('tbody');
+
+            const clonedTable = table.cloneNode(false);
+            var $appendableArea = clonedTable;
+
+            if (thead) 
+                clonedTable.appendChild(thead.cloneNode(true));
+            if (tbody) {
+                const clonedTBody = tbody.cloneNode(false);
+                clonedTBody.className = tbody.className;
+                clonedTBody.style.cssText = tbody.style.cssText;
+                clonedTable.appendChild(clonedTBody);
+                $appendableArea = $(clonedTBody);
+            }
+            clonedTable.className = table.className;
+            clonedTable.style.cssText = table.style.cssText;
+
+            async function addTablePage() {
+                var pageHeight = $page.innerHeight();
+                var remainingHeight = getRemainingHeight();
+
+                if (remainingHeight < pageHeight *0.2)
+                    await addpg();
+                //setStatus("added page #" + page);
+                var $tbl = $(clonedTable.cloneNode(true));
+                $tbl.appendTo($page);
+                $tbl.wrap(wrapItem);
+                $appendableArea = $tbl.find("tbody");
+                if ($appendableArea.length == 0)
+                    $appendableArea = $tbl;
+                return $tbl;
+            }
+
+
+            $lastElement = addTablePage();
+
+            var rows = table.rows;
+            if (tbody)
+                rows = tbody.rows;
+            
+            while (rows.length >0 ) {
+                $row = $(rows[0]);
+                //if(rows.length % 2 == 0)
+                await new Promise(requestAnimationFrame);
+                if (!willElementFit($row,10))
+                    $lastElement = addTablePage();
+                $appendableArea.append($row);
+            }
+
+            return $lastElement;
+        }
+
+
+async function createPdfFromHtmlElements(selector, filename = 'Reportpdf.pdf') {
+    const doc = new jspdf.jsPDF("portrait", "in", "letter");
+    const elements = document.querySelectorAll(selector);
+
+    if (elements.length === 0) {
+        console.error(`No elements found with selector '${selector}'.`);
+        return;
+    }
+
+    await setStatus("Building PDF...");
+
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = doc.internal.pageSize.getHeight();
+
+    for (let i = 0; i < elements.length; i++) {
+        try {
+            const canvas = await html2canvas(elements[i], {
+                scale: 2, // Higher resolution for better quality
+                useCORS: true
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+
+            if (i > 0) {
+                doc.addPage();
+            }
+
+            const progress = (1 - ((elements.length - i) / elements.length)) * 100;
+            await setStatus(`Generating PDF page: ${i + 1}`, progress);
+
+            // Stretch image to fit the full PDF page size
+            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        } catch (error) {
+            console.error(`Error converting element ${i + 1} to canvas:`, error);
+        }
+    }
+
+    doc.save(filename);
+    $status.hide();
+}
+
+        function createPDF() {
+            createPdfFromHtmlElements('.programPg');
+        }
+
+        function downloadAsDoc(contentElement) {
+          const html = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+              <head><meta charset='utf-8'></head>
+              <body>${contentElement.innerHTML}</body>
+            </html>`;
+
+          const blob = new Blob(['\ufeff', html], {
+            type: 'application/msword',
+          });
+
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'document.doc';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+        
+
+        function getHeight($elem) {
+            if (!$elem || $elem.length === 0) return 0;
+            const el = $elem[0];
+            if (!(el instanceof Element)) return 0;
+
+            const style = window.getComputedStyle(el);
+
+          // Special case for <br> elements
+          if (el.tagName === "BR") {
+            const span = document.createElement("span");
+            span.style.display = "inline-block";
+            span.style.width = "1px";
+            span.style.height = "1px";
+            span.style.padding = "0";
+            span.style.margin = "0";
+            span.style.border = "0";
+
+            el.parentNode.insertBefore(span, el.nextSibling);
+            const brRect = el.getBoundingClientRect();
+            const spanRect = span.getBoundingClientRect();
+            const height = spanRect.top - brRect.top;
+            span.remove();
+            return height;
+          }
+
+          // General case for block/inline-block elements
+          const rect = el.getBoundingClientRect();
+          const marginTop = parseFloat(style.marginTop) || 0;
+          const marginBottom = parseFloat(style.marginBottom) || 0;
+
+          return rect.height + marginTop + marginBottom;
+        }
+
+
+        function getInnerContentHeight(el) {
+          if (!(el instanceof Element)) return 0;
+
+          const style = window.getComputedStyle(el);
+          const paddingTop = parseFloat(style.paddingTop) || 0;
+          const paddingBottom = parseFloat(style.paddingBottom) || 0;
+
+          return el.clientHeight - paddingTop - paddingBottom;
+        }
+
+        function getRemainingHeight() {
+            const pageHeight = getInnerContentHeight($page[0]); // $page.innerHeight();
+            let remainingHeight = pageHeight;
+            const children = $page.contents().toArray();
+            for (const child of children) {
+                remainingHeight -= getHeight($(child));
+            };
+            return remainingHeight;
+        }
+
+        function willElementFit($element,margin) {
+            if(!margin) margin = 0;
+            $container = $page;
+            const containerHeight = $container.innerHeight();
+            
+            let elementHeight = getHeight($element) + margin;
+            if (containerHeight < elementHeight)
+                return false;
+            return elementHeight < getRemainingHeight();
+        }
+
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div id="page_template" class="programPg">
+            <div class='content programPgInner'></div>
+            <div class='footer'><span>Page: </span></div>
+        </div>
+        <div class="d-print-none">
+            <%--<input class="printlaunch" id="Button1" type="button" value="Print" onclick="window.print();" />--%>
+            <a class="d-print-none printlaunch" onclick="window.print();" href="#"><i class=" fa fa-print"></i>Print</a><br />
+            <a class="d-print-none printlaunch" onclick="createPDF();" style="top: 60px;" href="javascript:void(0)"><i class=" fa fa-print"></i>PDF</a>
+        </div>
+        <div>
+            <div>
+                <div class="reportWrapper">
+                    <asp:PlaceHolder ID="phIntroPages" runat="server"></asp:PlaceHolder>
+                    <asp:PlaceHolder ID="phAfterTOC" runat="server"></asp:PlaceHolder>
+                    <asp:PlaceHolder ID="phPrograms" runat="server"></asp:PlaceHolder>
+                    <asp:PlaceHolder ID="phEndingPages" runat="server"></asp:PlaceHolder>
+                </div>
+                <div id="ContentPage" class="programPg">
+                    <div id="allcontent" class="programPgInner">
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+                    </div>
+                    <div class='footer'><span>Page: </span></div>
+                </div>
+
+                <div id="printStatus" class="modal reportStatus">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <a href="#" id="cancelbtn" class="btn btn-primary" style="color: white;" onclick="cancelFetch()">Cancel Fetch</a>
+                            <div id="log" class="statusMsg"></div>
+                            <div id="progressContainer">
+                                <div id="progressBar">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="no-print" id="to-top"><i class="fa fa-arrow-up"></i></a>
+        </div>
+    </form>
+</body>
+<script>$("body").show(); $(function () { $("body").show(); });</script>
+<div class="no-print" runat="server">
+    <%
+        var printType = "";
+        if (Request.QueryString["pt"] != null) printType = Request.QueryString["pt"];
+        printType = printType.ToLower();
+        if (printType == "a4" || printType == "pdf")
+        { %>
+    <style>
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0.0in;
+            }
+
+            .container {
+                width: auto;
+            }
+
+            .reportWrapper {
+                width: 1260px;
+            }
+
+            .programPg {
+                height: 1782px;
+                width: 1260px;
+            }
+        }
+    </style>
+    <%}
+        else
+        { %>
+
+    <style>
+        @media print {
+            @page {
+                size: letter portrait;
+                margin: 0.0in;
+            }
+
+            body {
+                zoom: 79%;
+            }
+
+            .container {
+                /*                    width: 100%;
+                    max-width: 1260px;
+                    min-width: 1137px !important;*/
+                width: auto;
+                max-width: 1260px;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+
+            .reportWrapper {
+                width: 1260px;
+            }
+
+            .programPg {
+                height: 1628px;
+                width: 1260px;
+            }
+        }
+    </style>
+    <%} %>
+</div>
+</html>
