@@ -112,7 +112,19 @@
                         if (resp.body.primaryDetail) msg += ' — primary: ' + resp.body.primaryDetail;
                         if (resp.body.fallbackDetail) msg += ', fallback: ' + resp.body.fallbackDetail;
                         if (resp.body.hint) msg += '. ' + resp.body.hint;
-                        if (resp.body.rawText) msg += ' — raw: ' + resp.body.rawText.substring(0, 200);
+                        if (resp.body.rawText) {
+                            // Strip HTML tags for compile-error pages so the actual message is visible
+                            var raw = resp.body.rawText.replace(/<style[\s\S]*?<\/style>/gi, ' ')
+                                                       .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+                                                       .replace(/<[^>]+>/g, ' ')
+                                                       .replace(/&nbsp;/g, ' ')
+                                                       .replace(/&lt;/g, '<')
+                                                       .replace(/&gt;/g, '>')
+                                                       .replace(/&amp;/g, '&')
+                                                       .replace(/\s+/g, ' ')
+                                                       .trim();
+                            msg += ' — raw: ' + raw.substring(0, 1500);
+                        }
                     }
                     console.error('Geocode failed:', resp);
                     onResult(null, msg);
