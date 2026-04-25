@@ -95,6 +95,13 @@ Implement the real `RbnClient`. Currently a stub at `FoxHuntCore/Clients/RbnClie
 - Remove the "stubbed in v1" callout from `CLAUDE.md` and `README.md`. Open a PR.
 
 ### v1.2 — National emergency-services map + scanner radio (scheduled 2026-05-22)
+
+**Design principles for v1.2 (NON-NEGOTIABLE):**
+- **Layperson UI.** No ham-radio jargon. No acronyms (CAD, EMS, RDF, talkgroup, ICAO, ADS-B). Use plain English labels: "Police" / "Fire" / "Medical" / "Channel" (not talkgroup) / "Live Calls" / "Helicopters Overhead" / "Where's the action?". Sidebar should fit on a phone screen and be readable by a non-technical neighbor.
+- **Obvious entry point.** A prominent red pill-shaped button `🚨 Emergencies Near Me` lives in the top nav of *every page* (added to `FoxHuntShell.Master`). Visually distinct from the regular `fox-nav-link` items. On click → `/EmergencyMap.aspx`. There's also a hero card on `/Default.aspx` (or `/Hunt.aspx`) so a first-time visitor can't miss it.
+- **Geolocation-first.** On first visit to EmergencyMap, browser prompts for location via `navigator.geolocation.getCurrentPosition()`. Granted → map centers on user (zoom 11), drops a "📍 Your location" pin, defaults the radius to 25 mi, sorts incidents by distance ascending. Denied → fallback prompt for ZIP code (server-side geocode via Nominatim, no key needed). Consent stored in `localStorage`; don't re-prompt on every load.
+- **Distance-based prioritization, not city multi-select.** Replace the "pick cities" UI with a single slider `Within: 5 / 10 / 25 / 50 / 100 mi` plus "All". Server filters incidents and aircraft by haversine distance from the user's coords. The city feeds are still aggregated under the hood (transparent to user).
+
 New page `/EmergencyMap.aspx` + handler `/Handlers/IncidentsApi.ashx` reusing the Leaflet map foundation from Hunt.aspx.
 - Aggregator pattern identical to `ReceptionAggregator` — one `IIncidentClient` per source, `Task.WhenAll` fan-out.
 - Municipal CAD feeds (sample cities, JSON/RSS): Seattle, SF, Oakland, Boston, NYC, Chicago, DC, Raleigh, Charlotte, Austin, Portland, Minneapolis, Denver, Phoenix. Curated list in `FoxHuntCore/EmergencySources.cs`; per-city client normalizes to a common `Incident` DTO (type, location, dispatched units, observedUtc).
