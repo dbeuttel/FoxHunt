@@ -99,15 +99,34 @@
     function lookupZip(zip, onResult) {
         if (!/^\d{5}(-\d{4})?$/.test(zip)) { onResult(null, 'invalid format'); return; }
         fetch('/Handlers/GeocodeApi.ashx?zip=' + encodeURIComponent(zip), { cache: 'no-store' })
-            .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+            .then(function (r) { return r.text().then(function (t) {
+                var body = null;
+                try { body = JSON.parse(t); } catch (e) { body = { rawText: t }; }
+                return { status: r.status, ok: r.ok, body: body };
+            }); })
             .then(function (resp) {
-                if (!resp.ok) { onResult(null, (resp.body && resp.body.error) || 'lookup failed'); return; }
+                if (!resp.ok) {
+                    var msg = 'lookup failed (HTTP ' + resp.status + ')';
+                    if (resp.body) {
+                        if (resp.body.error) msg = resp.body.error;
+                        if (resp.body.primaryDetail) msg += ' — primary: ' + resp.body.primaryDetail;
+                        if (resp.body.fallbackDetail) msg += ', fallback: ' + resp.body.fallbackDetail;
+                        if (resp.body.hint) msg += '. ' + resp.body.hint;
+                        if (resp.body.rawText) msg += ' — raw: ' + resp.body.rawText.substring(0, 200);
+                    }
+                    console.error('Geocode failed:', resp);
+                    onResult(null, msg);
+                    return;
+                }
                 onResult({
                     lat: resp.body.lat, lon: resp.body.lon, zip: resp.body.zip,
                     display: resp.body.display, source: 'zip', ts: Date.now()
                 }, null);
             })
-            .catch(function () { onResult(null, 'network error'); });
+            .catch(function (e) {
+                console.error('Geocode network error:', e);
+                onResult(null, 'network error: ' + (e && e.message ? e.message : 'unknown'));
+            });
     }
 
     function applyLocation(loc) {
@@ -240,7 +259,8 @@
         modalMsg.textContent = 'Looking up…';
         lookupZip((modalZipInput.value || '').trim(), function (loc, err) {
             if (loc) { applyLocation(loc); modalMsg.textContent = ''; }
-            else { modalMsg.textContent = err === 'invalid format' ? 'Please enter a 5-digit US ZIP.' : 'Couldn’t find that ZIP. Try again.'; }
+            else if (err === 'invalid format') { modalMsg.textContent = 'Please enter a 5-digit US ZIP.'; }
+            else { modalMsg.textContent = err || 'Couldn’t find that ZIP. Try again.'; }
         });
     });
     if (modalZipInput) modalZipInput.addEventListener('keydown', function (e) {
