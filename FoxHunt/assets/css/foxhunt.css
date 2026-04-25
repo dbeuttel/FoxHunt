@@ -104,6 +104,46 @@ form { height: 100%; }
 .fox-coming-soon-zip-msg { color: var(--fox-text-dim); font-size: 0.85rem; min-height: 1.2em; margin-top: 0.5rem; }
 .fox-coming-soon-loc-clear { margin-top: 0.75rem; text-align: right; }
 
+/* ===== Emergency Map (v1.2 chunk 1) ===== */
+.fox-sidebar-ems { width: 320px; }
+.fox-ems-heading { margin: 0 0 1rem; font-size: 1.1rem; font-weight: 600; color: var(--fox-text); }
+.fox-ems-location-block { padding-bottom: 0.5rem; }
+.fox-ems-location-display { padding: 0.4rem 0.6rem; background: var(--fox-surface-2); border: 1px solid var(--fox-border); border-radius: 4px; font-size: 0.9rem; color: var(--fox-text); margin-bottom: 0.4rem; }
+.fox-ems-location-actions { display: flex; gap: 0.4rem; }
+.fox-ems-distance-pills { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.fox-ems-distance-pill { padding: 0.35rem 0.7rem; background: var(--fox-surface-2); border: 1px solid var(--fox-border); border-radius: 99px; color: var(--fox-text-dim); font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; cursor: pointer; }
+.fox-ems-distance-pill:hover { color: var(--fox-text); }
+.fox-ems-distance-pill-active { background: var(--fox-accent); color: #1a1408; border-color: var(--fox-accent); font-weight: 600; }
+.fox-ems-toggles { display: flex; flex-direction: column; gap: 0.4rem; }
+.fox-ems-toggle { display: flex; align-items: center; gap: 0.55rem; padding: 0.45rem 0.6rem; background: var(--fox-surface-2); border: 1px solid var(--fox-border); border-radius: 6px; cursor: pointer; user-select: none; font-size: 0.9rem; }
+.fox-ems-toggle:hover { border-color: var(--fox-text-dim); }
+.fox-ems-toggle input { accent-color: var(--fox-accent); margin: 0; }
+.fox-ems-toggle-icon { font-size: 1rem; }
+.fox-ems-status-block { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; }
+.fox-ems-status-line { flex: 1; font-size: 0.8rem; color: var(--fox-text-dim); font-family: 'JetBrains Mono', monospace; }
+.fox-ems-disclaimer { margin-top: 0.5rem; padding: 0.6rem 0.7rem; background: var(--fox-surface-2); border-left: 3px solid var(--fox-text-dim); border-radius: 4px; font-size: 0.78rem; color: var(--fox-text-dim); line-height: 1.4; }
+
+.fox-ems-map { background: #0a0d14; }
+.fox-ems-empty { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(21, 25, 34, 0.94); border: 1px solid var(--fox-border); border-radius: 8px; padding: 1.5rem 2rem; text-align: center; max-width: 360px; z-index: 500; pointer-events: none; }
+.fox-ems-empty-icon { font-size: 2.5rem; margin-bottom: 0.4rem; }
+.fox-ems-empty-title { font-weight: 600; color: var(--fox-text); margin-bottom: 0.3rem; }
+.fox-ems-empty-body { color: var(--fox-text-dim); font-size: 0.85rem; line-height: 1.45; }
+
+.fox-ems-user-location { background: transparent; border: none; }
+.fox-ems-user-location-pin { font-size: 1.8rem; line-height: 1; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
+
+.fox-ems-location-modal { position: fixed; inset: 0; background: rgba(11, 13, 17, 0.85); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.fox-ems-location-modal-card { background: var(--fox-surface); border: 1px solid var(--fox-border); border-radius: 10px; padding: 2rem; max-width: 460px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.fox-ems-location-modal-card h2 { margin: 0 0 0.4rem; font-size: 1.3rem; color: var(--fox-text); }
+.fox-ems-location-modal-card p { color: var(--fox-text-dim); margin: 0 0 1.25rem; }
+.fox-ems-location-modal-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+.fox-ems-location-modal-or { color: var(--fox-text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin: 0.4rem 0; }
+.fox-ems-location-modal-zip-row { display: flex; gap: 0.5rem; }
+.fox-ems-location-modal-zip-input { flex: 1; padding: 0.55rem 0.7rem; background: var(--fox-surface-2); color: var(--fox-text); border: 1px solid var(--fox-border); border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 1rem; }
+.fox-ems-location-modal-zip-input:focus { outline: none; border-color: var(--fox-accent); }
+.fox-ems-location-modal-msg { font-size: 0.85rem; color: var(--fox-text-dim); min-height: 1.2em; }
+.fox-ems-location-modal-skip { margin-top: 0.5rem; }
+
 .fox-main { flex: 1; display: flex; min-height: 0; overflow: hidden; }
 
 .fox-sidebar { width: 320px; background: var(--fox-surface); border-right: 1px solid var(--fox-border); padding: 1rem; overflow-y: auto; box-sizing: border-box; }
