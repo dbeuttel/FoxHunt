@@ -145,6 +145,8 @@ form { height: 100%; }
 .fox-ems-location-modal-skip { margin-top: 0.5rem; }
 
 .fox-ems-scanner-block { padding-bottom: 0.5rem; }
+.fox-ems-scanner-region { font-size: 0.85rem; color: var(--fox-text-dim); margin-bottom: 0.5rem; }
+.fox-ems-scanner-rescan { font-size: 0.78rem; }
 .fox-ems-scanner-select { width: 100%; padding: 0.5rem; background: var(--fox-surface-2); color: var(--fox-text); border: 1px solid var(--fox-border); border-radius: 4px; font-size: 0.9rem; margin-bottom: 0.5rem; }
 .fox-ems-scanner-player { width: 100%; min-height: 0; }
 .fox-ems-scanner-player:not(:empty) { min-height: 180px; margin-bottom: 0.5rem; }

@@ -122,6 +122,27 @@ CREATE TABLE IF NOT EXISTS TalkgroupActivity (
     FOREIGN KEY (TalkgroupFk) REFERENCES Talkgroup(Id)
 );
 
+CREATE TABLE IF NOT EXISTS BroadcastifyCounty (
+    Id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+    CountyKey             TEXT    NOT NULL UNIQUE,
+    StateAbbr             TEXT    NOT NULL,
+    CountyName            TEXT    NOT NULL,
+    BroadcastifyCountyId  INTEGER,
+    Status                TEXT    NOT NULL DEFAULT 'pending',
+    LastDiscoveredUtc     TEXT
+);
+
+CREATE TABLE IF NOT EXISTS BroadcastifyDiscoveredFeed (
+    Id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    CountyKey           TEXT    NOT NULL,
+    BroadcastifyFeedId  TEXT    NOT NULL,
+    Name                TEXT,
+    DiscoveredUtc       TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (CountyKey, BroadcastifyFeedId)
+);
+CREATE INDEX IF NOT EXISTS IX_BroadcastifyDiscoveredFeed_CountyKey
+    ON BroadcastifyDiscoveredFeed (CountyKey);
+
 INSERT OR IGNORE INTO SiteConfig (ConfigKey, ConfigValue) VALUES
     ('RefreshSec',      '30'),
     ('AppContactEmail', 'dbeuttel@dconc.gov'),

@@ -62,28 +62,13 @@
 
     <div class="fox-field fox-ems-scanner-block">
         <label>&#128266; Live scanner audio</label>
-        <select class="fox-ems-scanner-select" id="foxEmsScannerSelect">
-            <option value="">Pick a feed&hellip;</option>
+        <div class="fox-ems-scanner-region" id="foxEmsScannerRegion">Set your location to find feeds.</div>
+        <select class="fox-ems-scanner-select" id="foxEmsScannerSelect" style="display:none;">
+            <option value="">Pick a channel&hellip;</option>
         </select>
         <div class="fox-ems-scanner-player" id="foxEmsScannerPlayer"></div>
         <div class="fox-ems-scanner-actions">
-            <button type="button" class="fox-btn-link fox-ems-scanner-add-toggle" id="foxEmsScannerAddToggle">+ Add a feed</button>
-            <a class="fox-btn-link" href="https://www.broadcastify.com/" target="_blank" rel="noopener">Find feeds &rarr;</a>
-        </div>
-        <div class="fox-ems-scanner-add-form" id="foxEmsScannerAddForm" style="display:none;">
-            <input type="text" class="fox-ems-scanner-add-input" id="foxEmsScannerAddName" placeholder="Name (e.g. Durham PD)" maxlength="50" />
-            <input type="text" class="fox-ems-scanner-add-input" id="foxEmsScannerAddCity" placeholder="City, ST" maxlength="50" />
-            <input type="text" class="fox-ems-scanner-add-input" id="foxEmsScannerAddFeedId" placeholder="Broadcastify feed ID (e.g. 29622)" maxlength="20" />
-            <div class="fox-ems-scanner-add-coords">
-                <input type="text" class="fox-ems-scanner-add-input" id="foxEmsScannerAddLat" placeholder="Lat" maxlength="12" />
-                <input type="text" class="fox-ems-scanner-add-input" id="foxEmsScannerAddLon" placeholder="Lon" maxlength="12" />
-                <button type="button" class="fox-btn fox-btn-ghost fox-ems-scanner-add-here" id="foxEmsScannerAddHere">Use here</button>
-            </div>
-            <div class="fox-ems-scanner-add-actions">
-                <button type="button" class="fox-btn fox-ems-scanner-add-save" id="foxEmsScannerAddSave">Save feed</button>
-                <button type="button" class="fox-btn fox-btn-ghost fox-ems-scanner-add-cancel" id="foxEmsScannerAddCancel">Cancel</button>
-            </div>
-            <div class="fox-ems-scanner-add-msg" id="foxEmsScannerAddMsg"></div>
+            <button type="button" class="fox-btn-link fox-ems-scanner-rescan" id="foxEmsScannerRescan">Refresh feed list</button>
         </div>
     </div>
 
