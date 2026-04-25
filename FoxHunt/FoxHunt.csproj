@@ -1968,6 +1968,7 @@
     <Compile Include="FoxHuntCore\Emergency\Clients\SeattleFireClient.cs" />
     <Compile Include="FoxHuntCore\Emergency\Clients\SfFireClient.cs" />
     <Compile Include="FoxHuntCore\Emergency\Clients\NcDotClient.cs" />
+    <Compile Include="FoxHuntCore\Emergency\Clients\NwsAlertsClient.cs" />
     <Compile Include="FoxHuntCore\Emergency\ScannerFeeds.cs" />
     <Compile Include="FoxHuntCore\Emergency\UsStates.cs" />
     <Compile Include="FoxHuntCore\Emergency\BroadcastifyDiscovery.cs" />

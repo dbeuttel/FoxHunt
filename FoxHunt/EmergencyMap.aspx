@@ -42,6 +42,11 @@
                 <span class="fox-ems-toggle-icon">&#9877;&#65039;</span>
                 <span>Medical</span>
             </label>
+            <label class="fox-ems-toggle fox-ems-toggle-weather">
+                <input type="checkbox" id="foxEmsToggleWeather" checked />
+                <span class="fox-ems-toggle-icon">&#127786;</span>
+                <span>Severe weather</span>
+            </label>
             <label class="fox-ems-toggle fox-ems-toggle-helicopters">
                 <input type="checkbox" id="foxEmsToggleHelicopters" />
                 <span class="fox-ems-toggle-icon">&#128641;</span>

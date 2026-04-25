@@ -40,6 +40,7 @@
     var togglePolice    = document.getElementById('foxEmsTogglePolice');
     var toggleFire      = document.getElementById('foxEmsToggleFire');
     var toggleMedical   = document.getElementById('foxEmsToggleMedical');
+    var toggleWeather   = document.getElementById('foxEmsToggleWeather');
     var toggleHelis     = document.getElementById('foxEmsToggleHelicopters');
     var toggleHeatmap   = document.getElementById('foxEmsToggleHeatmap');
     var toggleAudio     = document.getElementById('foxEmsToggleAudio');
@@ -132,6 +133,7 @@
         if (service === 'fire')    return '#ff5c5c';
         if (service === 'medical') return '#3ddc84';
         if (service === 'police')  return '#4aa3ff';
+        if (service === 'weather') return '#f4a742';
         return '#cccccc';
     }
 
@@ -142,11 +144,13 @@
         incidents.forEach(function (inc) {
             if (!isFinite(inc.lat) || !isFinite(inc.lon)) return;
             var color = colorFor(inc.service);
+            var radius = inc.service === 'weather' ? 14 : 8;
+            var fillOpacity = inc.service === 'weather' ? 0.35 : 0.65;
             var pin = L.circleMarker([inc.lat, inc.lon], {
-                radius: 8,
+                radius: radius,
                 color: color,
                 fillColor: color,
-                fillOpacity: 0.65,
+                fillOpacity: fillOpacity,
                 weight: 2,
                 className: 'fox-ems-marker fox-ems-marker-' + inc.service
             });
@@ -178,7 +182,8 @@
                + '&services=' + [
                     togglePolice.checked ? 'police' : '',
                     toggleFire.checked ? 'fire' : '',
-                    toggleMedical.checked ? 'medical' : ''
+                    toggleMedical.checked ? 'medical' : '',
+                    toggleWeather && toggleWeather.checked ? 'weather' : ''
                  ].filter(Boolean).join(',');
         fetch('/Handlers/IncidentsApi.ashx' + qs, { cache: 'no-store' })
             .then(function (r) { return r.ok ? r.json() : { incidents: [], aircraft: [] }; })
@@ -217,7 +222,7 @@
     }
 
     // Service / layer toggles trigger an immediate poll
-    [togglePolice, toggleFire, toggleMedical, toggleHelis, toggleHeatmap].forEach(function (el) {
+    [togglePolice, toggleFire, toggleMedical, toggleWeather, toggleHelis, toggleHeatmap].forEach(function (el) {
         if (el) el.addEventListener('change', poll);
     });
 

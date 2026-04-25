@@ -27,7 +27,7 @@ namespace FoxHunt.Handlers
                 ctx.Response.Write("{\"error\":\"missing zip\"}");
                 return;
             }
-            string zip = new string(zipRaw.Trim().ToCharArray());
+            string zip = zipRaw.Trim();
             if (zip.Length < 5 || zip.Length > 10)
             {
                 ctx.Response.StatusCode = 400;
@@ -65,42 +65,44 @@ namespace FoxHunt.Handlers
                 catch (Exception) { }
             }
 
+            // Always-identifying UA per Nominatim usage policy.
             string contact = FoxHuntConfig.Get("AppContactEmail", "");
-            string url = "https://nominatim.openstreetmap.org/search?postalcode="
-                       + Uri.EscapeDataString(zip)
-                       + "&country=us&format=json&limit=1";
+            if (string.IsNullOrWhiteSpace(contact)) contact = "foxhunt-app@example.local";
+            string ua = "FoxHunt/1.0 (" + contact + ")";
 
-            string body;
-            using (var http = new HttpClient())
+            // Try postalcode-search first; on miss, try free-form q= as fallback.
+            string err1 = null;
+            JObject hit = await NominatimSearchAsync(
+                "https://nominatim.openstreetmap.org/search?postalcode="
+                    + Uri.EscapeDataString(zip)
+                    + "&country=us&format=json&addressdetails=1&limit=1",
+                ua,
+                out err1).ConfigureAwait(false);
+
+            if (hit == null)
             {
-                http.Timeout = TimeSpan.FromSeconds(15);
-                http.DefaultRequestHeaders.UserAgent.ParseAdd(
-                    "FoxHunt/1.0 (" + (string.IsNullOrEmpty(contact) ? "no-contact" : contact) + ")");
-                try { body = await http.GetStringAsync(url).ConfigureAwait(false); }
-                catch (Exception ex)
+                string err2 = null;
+                hit = await NominatimSearchAsync(
+                    "https://nominatim.openstreetmap.org/search?q="
+                        + Uri.EscapeDataString(zip + " USA")
+                        + "&format=json&addressdetails=1&limit=1",
+                    ua,
+                    out err2).ConfigureAwait(false);
+                if (hit == null)
                 {
-                    ctx.Response.StatusCode = 502;
-                    ctx.Response.Write(JsonConvert.SerializeObject(new { error = "geocode upstream failed", detail = ex.Message }));
+                    ctx.Response.StatusCode = (err1 != null && err1.StartsWith("HTTP_")) ? 502 : 404;
+                    ctx.Response.Write(JsonConvert.SerializeObject(new
+                    {
+                        error = "zip not found",
+                        zip = zip,
+                        primaryDetail = err1 ?? "empty",
+                        fallbackDetail = err2 ?? "empty",
+                        hint = "If detail says HTTP_403/429/timeout, your network may be blocking nominatim.openstreetmap.org. If both say 'empty', the ZIP isn't indexed in OSM."
+                    }));
                     return;
                 }
             }
 
-            JArray arr;
-            try { arr = JArray.Parse(body); }
-            catch (Exception)
-            {
-                ctx.Response.StatusCode = 502;
-                ctx.Response.Write("{\"error\":\"geocode response parse failed\"}");
-                return;
-            }
-            if (arr.Count == 0)
-            {
-                ctx.Response.StatusCode = 404;
-                ctx.Response.Write("{\"error\":\"zip not found\"}");
-                return;
-            }
-
-            JObject hit = (JObject)arr[0];
             double lat, lon;
             if (!double.TryParse((string)hit["lat"], out lat) || !double.TryParse((string)hit["lon"], out lon))
             {
@@ -127,6 +129,34 @@ namespace FoxHunt.Handlers
             }
             catch (Exception) { }
             ctx.Response.Write(payload.ToString(Formatting.None));
+        }
+
+        private static async Task<JObject> NominatimSearchAsync(string url, string ua, out string err)
+        {
+            err = null;
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(15);
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd(ua);
+                    var resp = await http.GetAsync(url).ConfigureAwait(false);
+                    if (!resp.IsSuccessStatusCode)
+                    {
+                        err = "HTTP_" + (int)resp.StatusCode;
+                        return null;
+                    }
+                    string body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    if (string.IsNullOrEmpty(body) || body.Trim() == "[]") { err = "empty"; return null; }
+                    JArray arr;
+                    try { arr = JArray.Parse(body); }
+                    catch (Exception ex) { err = "parse:" + ex.Message; return null; }
+                    if (arr.Count == 0) { err = "empty"; return null; }
+                    return arr[0] as JObject;
+                }
+            }
+            catch (TaskCanceledException) { err = "timeout"; return null; }
+            catch (Exception ex) { err = "exception:" + ex.Message; return null; }
         }
     }
 }

@@ -13,7 +13,8 @@ namespace FoxHunt.Core.Emergency
             {
                 new SeattleFireClient(),
                 new SfFireClient(),
-                new NcDotClient()
+                new NcDotClient(),
+                new NwsAlertsClient()
                 // additional sources added in subsequent chunks
             };
 
