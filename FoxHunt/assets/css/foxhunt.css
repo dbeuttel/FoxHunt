@@ -92,6 +92,17 @@ form { height: 100%; }
 }
 .fox-page-emergency-coming-soon .fox-coming-soon-loc h3 { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--fox-text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
 .fox-page-emergency-coming-soon .fox-coming-soon-loc-status { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+.fox-coming-soon-loc-actions { margin-top: 1rem; }
+.fox-coming-soon-or { margin: 1rem 0 0.5rem; color: var(--fox-text-dim); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.fox-coming-soon-zip-row { display: flex; gap: 0.5rem; justify-content: center; align-items: center; }
+.fox-coming-soon-zip-input {
+    width: 160px; padding: 0.55rem 0.7rem; background: var(--fox-surface-2);
+    color: var(--fox-text); border: 1px solid var(--fox-border); border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 1rem; text-align: center;
+}
+.fox-coming-soon-zip-input:focus { outline: none; border-color: var(--fox-accent); }
+.fox-coming-soon-zip-msg { color: var(--fox-text-dim); font-size: 0.85rem; min-height: 1.2em; margin-top: 0.5rem; }
+.fox-coming-soon-loc-clear { margin-top: 0.75rem; text-align: right; }
 
 .fox-main { flex: 1; display: flex; min-height: 0; overflow: hidden; }
 

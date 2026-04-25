@@ -1439,6 +1439,7 @@
     <Content Include="Handlers\WsprProxy.ashx" />
     <Content Include="Handlers\RbnProxy.ashx" />
     <Content Include="Handlers\TdoaApi.ashx" />
+    <Content Include="Handlers\GeocodeApi.ashx" />
     <Content Include="SQLiteHelper.dll" />
     <Content Include="System.Data.SQLite.dll" />
     <Content Include="UploadBallots.aspx" />
