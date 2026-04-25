@@ -73,6 +73,55 @@ CREATE TABLE IF NOT EXISTS TdoaJob (
     FOREIGN KEY (HuntSessionId) REFERENCES HuntSession(Id)
 );
 
+CREATE TABLE IF NOT EXISTS Incident (
+    Id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    SourceCity    TEXT    NOT NULL,
+    Service       TEXT,
+    IncidentType  TEXT,
+    Lat           REAL,
+    Lon           REAL,
+    Address       TEXT,
+    UnitsCsv      TEXT,
+    ObservedUtc   TEXT    NOT NULL,
+    RawJson       TEXT
+);
+CREATE INDEX IF NOT EXISTS IX_Incident_ObservedUtc ON Incident (ObservedUtc);
+CREATE INDEX IF NOT EXISTS IX_Incident_SourceCity  ON Incident (SourceCity);
+
+CREATE TABLE IF NOT EXISTS Aircraft (
+    Icao24       TEXT    PRIMARY KEY,
+    Callsign     TEXT,
+    Operator     TEXT,
+    Lat          REAL,
+    Lon          REAL,
+    Heading      REAL,
+    Altitude     REAL,
+    ObservedUtc  TEXT    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Talkgroup (
+    Id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    SystemShortname TEXT    NOT NULL,
+    TalkgroupId     INTEGER NOT NULL,
+    Name            TEXT,
+    Category        TEXT,
+    Agency          TEXT,
+    CityKey         TEXT,
+    Lat             REAL,
+    Lon             REAL,
+    Encrypted       INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS IX_Talkgroup_CityKey ON Talkgroup (CityKey);
+
+CREATE TABLE IF NOT EXISTS TalkgroupActivity (
+    Id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    TalkgroupFk     INTEGER NOT NULL,
+    WindowStartUtc  TEXT    NOT NULL,
+    CallCount       INTEGER NOT NULL,
+    LastCallUtc     TEXT,
+    FOREIGN KEY (TalkgroupFk) REFERENCES Talkgroup(Id)
+);
+
 INSERT OR IGNORE INTO SiteConfig (ConfigKey, ConfigValue) VALUES
     ('RefreshSec',      '30'),
     ('AppContactEmail', 'dbeuttel@dconc.gov'),

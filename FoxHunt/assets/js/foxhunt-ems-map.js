@@ -117,11 +117,54 @@
         startPolling();
     }
 
-    function rebuildIncidents(reports) {
+    function escapeHtml(s) {
+        if (s == null) return '';
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function colorFor(service) {
+        if (service === 'fire')    return '#ff5c5c';
+        if (service === 'medical') return '#3ddc84';
+        if (service === 'police')  return '#4aa3ff';
+        return '#cccccc';
+    }
+
+    function rebuildIncidents(incidents) {
         incidentLayer.clearLayers();
-        if (!reports || reports.length === 0) { showEmpty(); return; }
+        if (!incidents || incidents.length === 0) { showEmpty(); return; }
         hideEmpty();
-        // Stub for chunk 1 — data wiring in a later chunk
+        incidents.forEach(function (inc) {
+            if (!isFinite(inc.lat) || !isFinite(inc.lon)) return;
+            var color = colorFor(inc.service);
+            var pin = L.circleMarker([inc.lat, inc.lon], {
+                radius: 8,
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.65,
+                weight: 2,
+                className: 'fox-ems-marker fox-ems-marker-' + inc.service
+            });
+            var distLine = isFinite(inc.distanceMi)
+                ? inc.distanceMi.toFixed(1) + ' mi away'
+                : '';
+            var ageLine = inc.ageStr || '';
+            var meta = [distLine, ageLine].filter(Boolean).join(' &middot; ');
+            var html =
+                '<div class="fox-ems-popup">' +
+                  '<div class="fox-ems-popup-header"><strong>' + escapeHtml(inc.type || 'Emergency') + '</strong></div>' +
+                  (meta ? '<div class="fox-ems-popup-distance">' + meta + '</div>' : '') +
+                  (inc.address ? '<div class="fox-ems-popup-addr">' + escapeHtml(inc.address) + '</div>' : '') +
+                  (inc.units ? '<div class="fox-ems-popup-units">Units: ' + escapeHtml(inc.units) + '</div>' : '') +
+                  '<div class="fox-ems-popup-source">' + escapeHtml(inc.city || '') + '</div>' +
+                '</div>';
+            pin.bindPopup(html);
+            incidentLayer.addLayer(pin);
+        });
     }
 
     function poll() {

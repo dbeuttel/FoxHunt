@@ -1960,6 +1960,11 @@
     <Compile Include="FoxHuntCore\Clients\WsprClient.cs" />
     <Compile Include="FoxHuntCore\Clients\RbnClient.cs" />
     <Compile Include="FoxHuntCore\Clients\KiwiListClient.cs" />
+    <Compile Include="FoxHuntCore\Emergency\Geo.cs" />
+    <Compile Include="FoxHuntCore\Emergency\Incident.cs" />
+    <Compile Include="FoxHuntCore\Emergency\IIncidentClient.cs" />
+    <Compile Include="FoxHuntCore\Emergency\IncidentAggregator.cs" />
+    <Compile Include="FoxHuntCore\Emergency\Clients\SeattleFireClient.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
