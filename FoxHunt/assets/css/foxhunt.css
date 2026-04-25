@@ -28,6 +28,71 @@ form { height: 100%; }
 .fox-nav-spacer { flex: 1; }
 .fox-nav-status { color: var(--fox-text-dim); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; padding: 0.25rem 0.5rem; border: 1px solid var(--fox-border); border-radius: 4px; }
 
+.fox-nav-emergency {
+    background: #e02020;
+    color: #fff !important;
+    padding: 0.45rem 1rem;
+    border-radius: 99px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.95rem;
+    box-shadow: 0 0 0 0 rgba(224, 32, 32, 0.55);
+    animation: foxEmergencyPulse 2.4s infinite;
+    transition: background 0.15s, transform 0.15s;
+}
+.fox-nav-emergency:hover { background: #c01818; transform: translateY(-1px); }
+@keyframes foxEmergencyPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(224, 32, 32, 0.55); }
+    70%  { box-shadow: 0 0 0 10px rgba(224, 32, 32, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(224, 32, 32, 0); }
+}
+
+.fox-emergency-hero {
+    position: relative;
+    margin: 1rem 1.5rem 0;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(90deg, rgba(224,32,32,0.18), rgba(224,32,32,0.06) 40%, transparent);
+    border: 1px solid rgba(224, 32, 32, 0.45);
+    border-left: 4px solid #e02020;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+.fox-emergency-hero-icon { font-size: 1.8rem; line-height: 1; flex-shrink: 0; }
+.fox-emergency-hero-text { flex: 1; min-width: 0; }
+.fox-emergency-hero-title { font-weight: 700; font-size: 1.05rem; color: var(--fox-text); margin-bottom: 0.15rem; }
+.fox-emergency-hero-body { color: var(--fox-text-dim); font-size: 0.9rem; }
+.fox-emergency-hero-cta {
+    background: #e02020; color: #fff !important; padding: 0.6rem 1.1rem;
+    border-radius: 6px; font-weight: 700; text-decoration: none; white-space: nowrap;
+    flex-shrink: 0;
+}
+.fox-emergency-hero-cta:hover { background: #c01818; }
+.fox-emergency-hero-close {
+    position: absolute; top: 0.4rem; right: 0.5rem;
+    background: transparent; border: none; color: var(--fox-text-dim);
+    font-size: 1.3rem; cursor: pointer; line-height: 1; padding: 0.25rem 0.5rem;
+}
+.fox-emergency-hero-close:hover { color: var(--fox-text); }
+
+.fox-page-emergency-coming-soon { max-width: 640px; margin: 3rem auto; text-align: center; padding: 0 1.5rem; }
+.fox-page-emergency-coming-soon h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+.fox-page-emergency-coming-soon .fox-coming-soon-icon { font-size: 4rem; line-height: 1; margin-bottom: 0.5rem; }
+.fox-page-emergency-coming-soon p { color: var(--fox-text-dim); font-size: 1rem; line-height: 1.55; }
+.fox-page-emergency-coming-soon .fox-coming-soon-eta {
+    display: inline-block; padding: 0.4rem 0.8rem; background: var(--fox-surface);
+    border: 1px solid var(--fox-border); border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace; color: var(--fox-accent); margin: 1rem 0;
+}
+.fox-page-emergency-coming-soon .fox-coming-soon-loc {
+    background: var(--fox-surface); border: 1px solid var(--fox-border);
+    border-radius: 8px; padding: 1rem; margin-top: 1.5rem; text-align: left;
+}
+.fox-page-emergency-coming-soon .fox-coming-soon-loc h3 { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--fox-text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.fox-page-emergency-coming-soon .fox-coming-soon-loc-status { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+
 .fox-main { flex: 1; display: flex; min-height: 0; overflow: hidden; }
 
 .fox-sidebar { width: 320px; background: var(--fox-surface); border-right: 1px solid var(--fox-border); padding: 1rem; overflow-y: auto; box-sizing: border-box; }

@@ -2,6 +2,27 @@
 <asp:Content ID="HuntHead" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
 </asp:Content>
 <asp:Content ID="HuntBody" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="fox-emergency-hero" id="foxEmergencyHero">
+        <button type="button" class="fox-emergency-hero-close" id="foxEmergencyHeroClose" title="Hide this">&times;</button>
+        <div class="fox-emergency-hero-icon">&#128680;</div>
+        <div class="fox-emergency-hero-text">
+            <div class="fox-emergency-hero-title">Looking for emergencies near you?</div>
+            <div class="fox-emergency-hero-body">See active police, fire, and medical calls in your area, helicopters overhead, and listen in to live radio.</div>
+        </div>
+        <a class="fox-emergency-hero-cta" href="/EmergencyMap.aspx">Open Emergency Map &rarr;</a>
+    </div>
+    <script>
+        (function () {
+            var hero = document.getElementById('foxEmergencyHero');
+            if (!hero) return;
+            try { if (localStorage.getItem('foxHideEmergencyHero') === '1') hero.style.display = 'none'; } catch (e) {}
+            var btn = document.getElementById('foxEmergencyHeroClose');
+            if (btn) btn.addEventListener('click', function () {
+                hero.style.display = 'none';
+                try { localStorage.setItem('foxHideEmergencyHero', '1'); } catch (e) {}
+            });
+        })();
+    </script>
     <aside class="fox-sidebar fox-sidebar-hunt">
         <div class="fox-field fox-sidebar-target-picker">
             <label for="foxTargetSelect">Target</label>

@@ -35,6 +35,7 @@
             <a class="fox-nav-link" href="/Sessions.aspx">Sessions</a>
             <a class="fox-nav-link" href="/Admin.aspx">Admin</a>
             <span class="fox-nav-spacer"></span>
+            <a class="fox-nav-emergency" href="/EmergencyMap.aspx" title="See active emergencies near you">&#128680; Emergencies Near Me</a>
             <span class="fox-nav-status" id="foxNavStatus">idle</span>
         </nav>
         <main class="fox-main">

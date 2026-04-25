@@ -1706,6 +1706,7 @@
     <Content Include="Bands.aspx" />
     <Content Include="Sessions.aspx" />
     <Content Include="Admin.aspx" />
+    <Content Include="EmergencyMap.aspx" />
     <Content Include="assets\css\foxhunt.css" />
     <Content Include="assets\js\foxhunt-map.js" />
     <Content Include="Site1.Master" />
@@ -1893,6 +1894,13 @@
     </Compile>
     <Compile Include="Admin.aspx.designer.cs">
       <DependentUpon>Admin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EmergencyMap.aspx.cs">
+      <DependentUpon>EmergencyMap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EmergencyMap.aspx.designer.cs">
+      <DependentUpon>EmergencyMap.aspx</DependentUpon>
     </Compile>
     <Compile Include="QueryBuilder.aspx.cs">
       <DependentUpon>QueryBuilder.aspx</DependentUpon>
