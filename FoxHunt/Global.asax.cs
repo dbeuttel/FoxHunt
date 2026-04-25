@@ -21,6 +21,15 @@ namespace FoxHunt
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
+
+            // Outbound HTTPS to modern endpoints (Nominatim, NWS, OpenSky,
+            // Broadcastify, OpenMHz) requires TLS 1.2+. .NET Framework 4.8's
+            // default may not enable it depending on Windows version + patches.
+            System.Net.ServicePointManager.SecurityProtocol =
+                System.Net.SecurityProtocolType.Tls12
+                | System.Net.SecurityProtocolType.Tls11
+                | System.Net.SecurityProtocolType.Tls;
+
             DTIControls.Share.initializePathProvider();
 
             sqlLiteHelper.checkAndCreateAllTables(new dsShare());

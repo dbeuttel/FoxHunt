@@ -168,7 +168,14 @@ namespace FoxHunt.Handlers
                 }
             }
             catch (TaskCanceledException) { result.Err = "timeout"; return result; }
-            catch (Exception ex) { result.Err = "exception:" + ex.Message; return result; }
+            catch (Exception ex)
+            {
+                string detail = ex.GetType().Name + ": " + ex.Message;
+                if (ex.InnerException != null) detail += " | inner: " + ex.InnerException.GetType().Name + ": " + ex.InnerException.Message;
+                if (ex.InnerException != null && ex.InnerException.InnerException != null) detail += " | inner2: " + ex.InnerException.InnerException.Message;
+                result.Err = "exception:" + detail;
+                return result;
+            }
         }
     }
 }
