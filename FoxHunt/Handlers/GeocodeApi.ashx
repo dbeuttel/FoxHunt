@@ -159,10 +159,10 @@ namespace FoxHunt.Handlers
                     }
                     string body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
                     if (string.IsNullOrEmpty(body) || body.Trim() == "[]") { result.Err = "empty"; return result; }
-                    JArray arr;
+                    JArray arr = null;
                     try { arr = JArray.Parse(body); }
                     catch (Exception ex) { result.Err = "parse:" + ex.Message; return result; }
-                    if (arr.Count == 0) { result.Err = "empty"; return result; }
+                    if (arr == null || arr.Count == 0) { result.Err = "empty"; return result; }
                     result.Hit = arr[0] as JObject;
                     return result;
                 }
