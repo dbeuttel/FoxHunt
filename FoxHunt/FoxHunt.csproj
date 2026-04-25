@@ -1441,6 +1441,7 @@
     <Content Include="Handlers\TdoaApi.ashx" />
     <Content Include="Handlers\GeocodeApi.ashx" />
     <Content Include="Handlers\IncidentsApi.ashx" />
+    <Content Include="Handlers\ScannerFeedsApi.ashx" />
     <Content Include="assets\js\foxhunt-ems-map.js" />
     <Content Include="SQLiteHelper.dll" />
     <Content Include="System.Data.SQLite.dll" />
@@ -1967,6 +1968,7 @@
     <Compile Include="FoxHuntCore\Emergency\Clients\SeattleFireClient.cs" />
     <Compile Include="FoxHuntCore\Emergency\Clients\SfFireClient.cs" />
     <Compile Include="FoxHuntCore\Emergency\Clients\NcDotClient.cs" />
+    <Compile Include="FoxHuntCore\Emergency\ScannerFeeds.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

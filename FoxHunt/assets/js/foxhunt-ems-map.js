@@ -246,6 +246,182 @@
         setStatus('Showing all of US (no location filter)');
     });
 
+    // ===== Scanner audio (Broadcastify) =====
+    var scannerSelect    = document.getElementById('foxEmsScannerSelect');
+    var scannerPlayer    = document.getElementById('foxEmsScannerPlayer');
+    var scannerAddToggle = document.getElementById('foxEmsScannerAddToggle');
+    var scannerAddForm   = document.getElementById('foxEmsScannerAddForm');
+    var scannerAddName   = document.getElementById('foxEmsScannerAddName');
+    var scannerAddCity   = document.getElementById('foxEmsScannerAddCity');
+    var scannerAddFeedId = document.getElementById('foxEmsScannerAddFeedId');
+    var scannerAddLat    = document.getElementById('foxEmsScannerAddLat');
+    var scannerAddLon    = document.getElementById('foxEmsScannerAddLon');
+    var scannerAddHere   = document.getElementById('foxEmsScannerAddHere');
+    var scannerAddSave   = document.getElementById('foxEmsScannerAddSave');
+    var scannerAddCancel = document.getElementById('foxEmsScannerAddCancel');
+    var scannerAddMsg    = document.getElementById('foxEmsScannerAddMsg');
+
+    var curatedFeeds = [];
+    var customFeeds = [];
+
+    function readCustomFeeds() {
+        try {
+            var raw = localStorage.getItem('foxScannerFeeds');
+            if (!raw) return [];
+            var arr = JSON.parse(raw);
+            return Array.isArray(arr) ? arr : [];
+        } catch (e) { return []; }
+    }
+    function writeCustomFeeds(list) {
+        try { localStorage.setItem('foxScannerFeeds', JSON.stringify(list)); } catch (e) {}
+    }
+
+    function distanceForFeed(feed, loc) {
+        if (!loc || !isFinite(feed.Lat) && !isFinite(feed.lat)) return Infinity;
+        var fLat = isFinite(feed.Lat) ? feed.Lat : feed.lat;
+        var fLon = isFinite(feed.Lon) ? feed.Lon : feed.lon;
+        if (!isFinite(fLat) || !isFinite(fLon)) return Infinity;
+        var R = 3958.8;
+        var toRad = function (d) { return d * Math.PI / 180; };
+        var dLat = toRad(fLat - loc.lat);
+        var dLon = toRad(fLon - loc.lon);
+        var a = Math.sin(dLat/2)*Math.sin(dLat/2)
+              + Math.cos(toRad(loc.lat))*Math.cos(toRad(fLat))
+              * Math.sin(dLon/2)*Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function normalizeFeed(f) {
+        return {
+            id: f.Id || f.id,
+            name: f.Name || f.name,
+            city: f.City || f.city,
+            state: f.State || f.state,
+            broadcastifyFeedId: f.BroadcastifyFeedId || f.broadcastifyFeedId || f.feedId,
+            lat: isFinite(f.Lat) ? f.Lat : (isFinite(f.lat) ? f.lat : 0),
+            lon: isFinite(f.Lon) ? f.Lon : (isFinite(f.lon) ? f.lon : 0),
+            description: f.Description || f.description || '',
+            custom: !!f.custom
+        };
+    }
+
+    function rebuildScannerOptions() {
+        if (!scannerSelect) return;
+        var loc = readLoc();
+        var all = curatedFeeds.concat(customFeeds).map(normalizeFeed);
+        all.sort(function (a, b) {
+            return distanceForFeed(a, loc) - distanceForFeed(b, loc);
+        });
+        var prev = scannerSelect.value;
+        scannerSelect.innerHTML = '<option value="">Pick a feed…</option>';
+        all.forEach(function (f) {
+            if (!f.broadcastifyFeedId) return;
+            var d = distanceForFeed(f, loc);
+            var distLabel = (loc && isFinite(d)) ? '  (' + Math.round(d) + ' mi)' : '';
+            var opt = document.createElement('option');
+            opt.value = f.broadcastifyFeedId;
+            opt.textContent = (f.custom ? '★ ' : '') + f.name + ' — ' + (f.city || '?') + (f.state ? ', ' + f.state : '') + distLabel;
+            opt.setAttribute('data-name', f.name);
+            opt.setAttribute('data-city', f.city || '');
+            opt.setAttribute('data-custom', f.custom ? '1' : '0');
+            scannerSelect.appendChild(opt);
+        });
+        if (prev) scannerSelect.value = prev;
+    }
+
+    function loadCuratedFeeds() {
+        fetch('/Handlers/ScannerFeedsApi.ashx', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : []; })
+            .then(function (list) {
+                curatedFeeds = (list || []).map(function (f) { f.custom = false; return f; });
+                rebuildScannerOptions();
+            })
+            .catch(function () {
+                curatedFeeds = [];
+                rebuildScannerOptions();
+            });
+    }
+
+    function selectFeed(feedId) {
+        if (!scannerPlayer) return;
+        if (!feedId) { scannerPlayer.innerHTML = ''; return; }
+        // Broadcastify webPlayer iframe — designed for embed.
+        var src = 'https://www.broadcastify.com/webPlayer.php?feedId=' + encodeURIComponent(feedId);
+        scannerPlayer.innerHTML = '<iframe class="fox-ems-scanner-iframe" src="' + src + '" allow="autoplay" title="Live scanner"></iframe>'
+                                 + '<a class="fox-ems-scanner-fullsite" target="_blank" rel="noopener" href="https://www.broadcastify.com/listen/feed/' + encodeURIComponent(feedId) + '">Open full Broadcastify page &rarr;</a>'
+                                 + '<button type="button" class="fox-btn-link fox-ems-scanner-remove" id="foxEmsScannerRemoveBtn">Remove from my feeds</button>';
+        var removeBtn = document.getElementById('foxEmsScannerRemoveBtn');
+        var opt = scannerSelect.querySelector('option[value="' + feedId + '"]');
+        var isCustom = opt && opt.getAttribute('data-custom') === '1';
+        removeBtn.style.display = isCustom ? '' : 'none';
+        if (isCustom) {
+            removeBtn.addEventListener('click', function () {
+                customFeeds = customFeeds.filter(function (f) { return (f.broadcastifyFeedId || f.BroadcastifyFeedId) !== feedId; });
+                writeCustomFeeds(customFeeds);
+                rebuildScannerOptions();
+                scannerSelect.value = '';
+                scannerPlayer.innerHTML = '';
+            });
+        }
+    }
+
+    function showAddForm(show) {
+        if (!scannerAddForm || !scannerAddToggle) return;
+        scannerAddForm.style.display = show ? 'block' : 'none';
+        scannerAddToggle.style.display = show ? 'none' : '';
+        if (show && scannerAddName) scannerAddName.focus();
+    }
+
+    function extractFeedId(raw) {
+        var s = (raw || '').trim();
+        var match = s.match(/\/listen\/feed\/(\d+)/);
+        if (match) return match[1];
+        if (/^\d+$/.test(s)) return s;
+        return null;
+    }
+
+    if (scannerSelect) scannerSelect.addEventListener('change', function () { selectFeed(scannerSelect.value); });
+    if (scannerAddToggle) scannerAddToggle.addEventListener('click', function () { showAddForm(true); });
+    if (scannerAddCancel) scannerAddCancel.addEventListener('click', function () { showAddForm(false); });
+    if (scannerAddHere) scannerAddHere.addEventListener('click', function () {
+        var loc = readLoc();
+        if (!loc) { scannerAddMsg.textContent = 'Set your location first.'; return; }
+        scannerAddLat.value = loc.lat.toFixed(4);
+        scannerAddLon.value = loc.lon.toFixed(4);
+    });
+    if (scannerAddSave) scannerAddSave.addEventListener('click', function () {
+        var name = (scannerAddName.value || '').trim();
+        var city = (scannerAddCity.value || '').trim();
+        var feedRaw = (scannerAddFeedId.value || '').trim();
+        var lat = parseFloat(scannerAddLat.value);
+        var lon = parseFloat(scannerAddLon.value);
+        var feedId = extractFeedId(feedRaw);
+        if (!name) { scannerAddMsg.textContent = 'Give the feed a name.'; return; }
+        if (!feedId) { scannerAddMsg.textContent = 'Paste a Broadcastify feed ID or feed URL.'; return; }
+        var feed = {
+            id: 'custom-' + feedId,
+            name: name,
+            city: city,
+            state: '',
+            broadcastifyFeedId: feedId,
+            lat: isFinite(lat) ? lat : 0,
+            lon: isFinite(lon) ? lon : 0,
+            custom: true
+        };
+        customFeeds.push(feed);
+        writeCustomFeeds(customFeeds);
+        rebuildScannerOptions();
+        scannerSelect.value = feedId;
+        selectFeed(feedId);
+        showAddForm(false);
+        scannerAddName.value = ''; scannerAddCity.value = '';
+        scannerAddFeedId.value = ''; scannerAddLat.value = ''; scannerAddLon.value = '';
+        scannerAddMsg.textContent = '';
+    });
+
+    customFeeds = readCustomFeeds();
+    loadCuratedFeeds();
+
     // Boot
     var existing = readLoc();
     if (existing) {
