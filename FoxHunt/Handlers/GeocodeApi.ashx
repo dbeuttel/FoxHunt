@@ -15,6 +15,12 @@ namespace FoxHunt.Handlers
     {
         public override bool IsReusable { get { return false; } }
 
+        private class NominatimResult
+        {
+            public JObject Hit;
+            public string  Err;
+        }
+
         public override async Task ProcessRequestAsync(HttpContext ctx)
         {
             ctx.Response.ContentType = "application/json";
@@ -47,8 +53,14 @@ namespace FoxHunt.Handlers
 
             string cacheKey = "geocode_zip_" + zip;
             BaseHelper helper = DataBase.createHelper("sqlLite");
-            object cachedRaw = helper.FetchSingleValue(
-                "select ConfigValue from SiteConfig where ConfigKey = @k", cacheKey);
+            object cachedRaw = null;
+            try
+            {
+                cachedRaw = helper.FetchSingleValue(
+                    "select ConfigValue from SiteConfig where ConfigKey = @k", cacheKey);
+            }
+            catch (Exception) { /* SiteConfig may not exist on older DBs; fall through */ }
+
             if (cachedRaw != null && cachedRaw != DBNull.Value)
             {
                 try
@@ -65,42 +77,43 @@ namespace FoxHunt.Handlers
                 catch (Exception) { }
             }
 
-            // Always-identifying UA per Nominatim usage policy.
-            string contact = FoxHuntConfig.Get("AppContactEmail", "");
+            string contact;
+            try { contact = FoxHuntConfig.Get("AppContactEmail", ""); }
+            catch (Exception) { contact = ""; }
             if (string.IsNullOrWhiteSpace(contact)) contact = "foxhunt-app@example.local";
             string ua = "FoxHunt/1.0 (" + contact + ")";
 
-            // Try postalcode-search first; on miss, try free-form q= as fallback.
-            string err1 = null;
-            JObject hit = await NominatimSearchAsync(
+            NominatimResult r1 = await NominatimSearchAsync(
                 "https://nominatim.openstreetmap.org/search?postalcode="
                     + Uri.EscapeDataString(zip)
                     + "&country=us&format=json&addressdetails=1&limit=1",
-                ua,
-                out err1).ConfigureAwait(false);
+                ua).ConfigureAwait(false);
 
+            JObject hit = r1.Hit;
+            string fallbackErr = null;
             if (hit == null)
             {
-                string err2 = null;
-                hit = await NominatimSearchAsync(
+                NominatimResult r2 = await NominatimSearchAsync(
                     "https://nominatim.openstreetmap.org/search?q="
                         + Uri.EscapeDataString(zip + " USA")
                         + "&format=json&addressdetails=1&limit=1",
-                    ua,
-                    out err2).ConfigureAwait(false);
-                if (hit == null)
+                    ua).ConfigureAwait(false);
+                hit = r2.Hit;
+                fallbackErr = r2.Err;
+            }
+
+            if (hit == null)
+            {
+                ctx.Response.StatusCode = (r1.Err != null && r1.Err.StartsWith("HTTP_")) ? 502 : 404;
+                ctx.Response.Write(JsonConvert.SerializeObject(new
                 {
-                    ctx.Response.StatusCode = (err1 != null && err1.StartsWith("HTTP_")) ? 502 : 404;
-                    ctx.Response.Write(JsonConvert.SerializeObject(new
-                    {
-                        error = "zip not found",
-                        zip = zip,
-                        primaryDetail = err1 ?? "empty",
-                        fallbackDetail = err2 ?? "empty",
-                        hint = "If detail says HTTP_403/429/timeout, your network may be blocking nominatim.openstreetmap.org. If both say 'empty', the ZIP isn't indexed in OSM."
-                    }));
-                    return;
-                }
+                    error = "zip not found",
+                    zip = zip,
+                    primaryDetail = r1.Err ?? "empty",
+                    fallbackDetail = fallbackErr ?? "empty",
+                    hint = "If detail says HTTP_403/429/timeout, your network may be blocking nominatim.openstreetmap.org. If both say 'empty', the ZIP isn't indexed in OSM."
+                }));
+                return;
             }
 
             double lat, lon;
@@ -113,14 +126,12 @@ namespace FoxHunt.Handlers
             string display = (string)hit["display_name"] ?? zip;
 
             long nowUnix = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-            JObject payload = new JObject
-            {
-                ["zip"] = zip,
-                ["lat"] = lat,
-                ["lon"] = lon,
-                ["display"] = display,
-                ["ts"] = nowUnix
-            };
+            JObject payload = new JObject();
+            payload["zip"] = zip;
+            payload["lat"] = lat;
+            payload["lon"] = lon;
+            payload["display"] = display;
+            payload["ts"] = nowUnix;
             try
             {
                 helper.ExecuteNonQuery(
@@ -131,9 +142,9 @@ namespace FoxHunt.Handlers
             ctx.Response.Write(payload.ToString(Formatting.None));
         }
 
-        private static async Task<JObject> NominatimSearchAsync(string url, string ua, out string err)
+        private static async Task<NominatimResult> NominatimSearchAsync(string url, string ua)
         {
-            err = null;
+            var result = new NominatimResult();
             try
             {
                 using (var http = new HttpClient())
@@ -143,20 +154,21 @@ namespace FoxHunt.Handlers
                     var resp = await http.GetAsync(url).ConfigureAwait(false);
                     if (!resp.IsSuccessStatusCode)
                     {
-                        err = "HTTP_" + (int)resp.StatusCode;
-                        return null;
+                        result.Err = "HTTP_" + (int)resp.StatusCode;
+                        return result;
                     }
                     string body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    if (string.IsNullOrEmpty(body) || body.Trim() == "[]") { err = "empty"; return null; }
+                    if (string.IsNullOrEmpty(body) || body.Trim() == "[]") { result.Err = "empty"; return result; }
                     JArray arr;
                     try { arr = JArray.Parse(body); }
-                    catch (Exception ex) { err = "parse:" + ex.Message; return null; }
-                    if (arr.Count == 0) { err = "empty"; return null; }
-                    return arr[0] as JObject;
+                    catch (Exception ex) { result.Err = "parse:" + ex.Message; return result; }
+                    if (arr.Count == 0) { result.Err = "empty"; return result; }
+                    result.Hit = arr[0] as JObject;
+                    return result;
                 }
             }
-            catch (TaskCanceledException) { err = "timeout"; return null; }
-            catch (Exception ex) { err = "exception:" + ex.Message; return null; }
+            catch (TaskCanceledException) { result.Err = "timeout"; return result; }
+            catch (Exception ex) { result.Err = "exception:" + ex.Message; return result; }
         }
     }
 }
