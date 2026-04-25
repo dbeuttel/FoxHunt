@@ -11,8 +11,10 @@ namespace FoxHunt.Core.Emergency
         {
             var clients = new IIncidentClient[]
             {
-                new SeattleFireClient()
-                // additional cities added in subsequent chunks
+                new SeattleFireClient(),
+                new SfFireClient(),
+                new NcDotClient()
+                // additional sources added in subsequent chunks
             };
 
             var tasks = clients.Select(c => SafeFetchAsync(c)).ToArray();

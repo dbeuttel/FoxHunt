@@ -1965,6 +1965,8 @@
     <Compile Include="FoxHuntCore\Emergency\IIncidentClient.cs" />
     <Compile Include="FoxHuntCore\Emergency\IncidentAggregator.cs" />
     <Compile Include="FoxHuntCore\Emergency\Clients\SeattleFireClient.cs" />
+    <Compile Include="FoxHuntCore\Emergency\Clients\SfFireClient.cs" />
+    <Compile Include="FoxHuntCore\Emergency\Clients\NcDotClient.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
