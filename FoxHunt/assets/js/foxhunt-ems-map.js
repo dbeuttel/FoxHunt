@@ -168,6 +168,57 @@
         return '#cccccc';
     }
 
+    var SERVICE_LABELS = {
+        fire:    { icon: '🔥', text: 'Fire' },
+        medical: { icon: '⚕️', text: 'Medical' },
+        police:  { icon: '🚓', text: 'Police / Traffic' },
+        weather: { icon: '🌪️', text: 'Weather alert' }
+    };
+
+    var SOURCE_LABELS = {
+        seattle: 'Seattle Fire / EMS',
+        sf:      'San Francisco Fire / EMS',
+        'nc-dot': 'NC DOT (statewide traffic)',
+        nws:     'National Weather Service'
+    };
+
+    function buildPopupHtml(inc) {
+        var svc = SERVICE_LABELS[inc.service] || { icon: '', text: inc.service || 'Emergency' };
+        var meta = [];
+        if (isFinite(inc.distanceMi)) meta.push(inc.distanceMi.toFixed(1) + ' mi away');
+        if (inc.ageStr) meta.push(inc.ageStr);
+
+        var html = '<div class="fox-ems-popup">';
+        html += '<div class="fox-ems-popup-header">'
+              + '<span class="fox-ems-popup-badge fox-ems-popup-badge-' + escapeHtml(inc.service || 'unknown') + '">'
+              +   svc.icon + ' ' + escapeHtml(svc.text)
+              + '</span>'
+              + '</div>';
+        html += '<div class="fox-ems-popup-type">' + escapeHtml(inc.type || 'Emergency') + '</div>';
+        if (inc.address) {
+            html += '<div class="fox-ems-popup-addr">📍 ' + escapeHtml(inc.address) + '</div>';
+        }
+        if (meta.length) {
+            html += '<div class="fox-ems-popup-meta">' + meta.join(' · ') + '</div>';
+        }
+        if (inc.units) {
+            html += '<div class="fox-ems-popup-units"><strong>Units:</strong> ' + escapeHtml(inc.units) + '</div>';
+        }
+        if (isFinite(inc.lat) && isFinite(inc.lon)) {
+            var gmaps = 'https://www.google.com/maps/search/?api=1&query=' + inc.lat + ',' + inc.lon;
+            var streetView = 'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' + inc.lat + ',' + inc.lon;
+            html += '<div class="fox-ems-popup-actions">'
+                  +   '<a href="' + gmaps + '" target="_blank" rel="noopener">Open in Google Maps</a>'
+                  +   ' · '
+                  +   '<a href="' + streetView + '" target="_blank" rel="noopener">Street View</a>'
+                  + '</div>';
+        }
+        var sourceLabel = SOURCE_LABELS[inc.city] || inc.city || 'unknown';
+        html += '<div class="fox-ems-popup-source">Source: ' + escapeHtml(sourceLabel) + '</div>';
+        html += '</div>';
+        return html;
+    }
+
     function rebuildIncidents(incidents) {
         incidentLayer.clearLayers();
         if (!incidents || incidents.length === 0) { showEmpty(); return; }
@@ -185,20 +236,7 @@
                 weight: 2,
                 className: 'fox-ems-marker fox-ems-marker-' + inc.service
             });
-            var distLine = isFinite(inc.distanceMi)
-                ? inc.distanceMi.toFixed(1) + ' mi away'
-                : '';
-            var ageLine = inc.ageStr || '';
-            var meta = [distLine, ageLine].filter(Boolean).join(' &middot; ');
-            var html =
-                '<div class="fox-ems-popup">' +
-                  '<div class="fox-ems-popup-header"><strong>' + escapeHtml(inc.type || 'Emergency') + '</strong></div>' +
-                  (meta ? '<div class="fox-ems-popup-distance">' + meta + '</div>' : '') +
-                  (inc.address ? '<div class="fox-ems-popup-addr">' + escapeHtml(inc.address) + '</div>' : '') +
-                  (inc.units ? '<div class="fox-ems-popup-units">Units: ' + escapeHtml(inc.units) + '</div>' : '') +
-                  '<div class="fox-ems-popup-source">' + escapeHtml(inc.city || '') + '</div>' +
-                '</div>';
-            pin.bindPopup(html);
+            pin.bindPopup(buildPopupHtml(inc), { maxWidth: 340, minWidth: 240 });
             incidentLayer.addLayer(pin);
         });
     }

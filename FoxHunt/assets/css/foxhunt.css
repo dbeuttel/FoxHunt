@@ -147,6 +147,24 @@ form { height: 100%; }
 .fox-ems-scanner-block { padding-bottom: 0.5rem; }
 .fox-ems-scanner-region { font-size: 0.85rem; color: var(--fox-text-dim); margin-bottom: 0.5rem; }
 .fox-ems-scanner-rescan { font-size: 0.78rem; }
+
+.fox-ems-popup { color: #1a1a1a; min-width: 240px; max-width: 320px; line-height: 1.45; font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+.fox-ems-popup-header { margin-bottom: 0.5rem; }
+.fox-ems-popup-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #fff; line-height: 1.4; }
+.fox-ems-popup-badge-fire    { background: #d32f2f; }
+.fox-ems-popup-badge-medical { background: #2e8540; }
+.fox-ems-popup-badge-police  { background: #1f5fa6; }
+.fox-ems-popup-badge-weather { background: #c47700; }
+.fox-ems-popup-type { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: #111; line-height: 1.3; }
+.fox-ems-popup-addr { font-size: 0.85rem; color: #333; margin-bottom: 0.4rem; }
+.fox-ems-popup-meta { font-size: 0.78rem; color: #666; font-family: 'JetBrains Mono', monospace; margin-bottom: 0.4rem; }
+.fox-ems-popup-units { font-size: 0.85rem; color: #333; margin-bottom: 0.4rem; }
+.fox-ems-popup-units strong { color: #111; }
+.fox-ems-popup-actions { margin: 0.6rem 0 0.3rem; padding-top: 0.4rem; border-top: 1px solid #e6e6e6; font-size: 0.85rem; }
+.fox-ems-popup-actions a { color: #1f5fa6; text-decoration: none; font-weight: 500; }
+.fox-ems-popup-actions a:hover { text-decoration: underline; }
+.fox-ems-popup-source { font-size: 0.7rem; color: #888; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid #e6e6e6; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+.leaflet-popup-content { margin: 12px 14px; }
 .fox-ems-scanner-select { width: 100%; padding: 0.5rem; background: var(--fox-surface-2); color: var(--fox-text); border: 1px solid var(--fox-border); border-radius: 4px; font-size: 0.9rem; margin-bottom: 0.5rem; }
 .fox-ems-scanner-player { width: 100%; min-height: 0; }
 .fox-ems-scanner-player:not(:empty) { min-height: 180px; margin-bottom: 0.5rem; }
